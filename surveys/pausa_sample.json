@@ -1,0 +1,56 @@
+{
+  "id": "pausa_sample",
+  "title": "Encuesta de ejemplo Pausa",
+  "description": "Pequeña encuesta para verificar que todo funciona en localhost.",
+  "items": [
+    {
+      "id": "intro",
+      "type": "text",
+      "prompt": "SECCIÓN 1 — Bienvenida\n\nEsta es una breve encuesta de ejemplo para el proyecto Pausa.\nSolo se usa para probar el flujo y la apariencia del formulario.",
+      "maxLength": 1
+    },
+    {
+      "id": "rol",
+      "type": "single_choice",
+      "prompt": "¿Cuál describe mejor tu rol en este proyecto?",
+      "options": [
+        "Investigador/a responsable",
+        "Colaborador/a",
+        "Estudiante",
+        "Otro"
+      ],
+      "required": true
+    },
+    {
+      "id": "frecuencia",
+      "type": "likert",
+      "prompt": "En general, ¿con qué frecuencia utilizas encuestas online en tu trabajo/estudio?",
+      "options": [
+        "Nunca",
+        "Rara vez",
+        "A veces",
+        "A menudo",
+        "Casi siempre"
+      ],
+      "required": true
+    },
+    {
+      "id": "experiencia",
+      "type": "rating",
+      "prompt": "Hasta ahora, ¿qué tal te parece la experiencia de uso de este formulario Pausa?",
+      "scale": 5,
+      "required": true,
+      "help": "1 = Muy mala, 5 = Excelente"
+    },
+    {
+      "id": "comentarios",
+      "type": "text",
+      "prompt": "¿Hay algo que te gustaría ajustar o mejorar en estos formularios para el proyecto real?",
+      "placeholder": "Escribe tus ideas o comentarios...",
+      "long": true,
+      "maxLength": 600,
+      "required": false
+    }
+  ]
+}
+

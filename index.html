@@ -1,0 +1,663 @@
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Pausa — encuestas</title>
+    <meta name="description" content="Pausa — encuestas breves y anónimas" />
+    <style>
+      :root {
+        --bg: #f7fafc;
+        --fg: #0f172a;
+        --muted: #475569;
+        --accent: #2563eb;
+        --card: #ffffff;
+        --border: #e2e8f0;
+        --ok: #16a34a;
+        --warn: #d97706;
+        --error: #dc2626;
+      }
+      * { box-sizing: border-box; }
+      html, body { height: 100%; }
+      body {
+        margin: 0;
+        font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Ubuntu, Cantarell, Noto Sans, Arial, "Apple Color Emoji", "Segoe UI Emoji";
+        background: var(--bg);
+        color: var(--fg);
+        -webkit-font-smoothing: antialiased;
+        -moz-osx-font-smoothing: grayscale;
+      }
+      header {
+        padding: 20px 16px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        position: sticky;
+        top: 0;
+        background: rgba(255,255,255,0.9);
+        backdrop-filter: saturate(180%) blur(8px);
+        border-bottom: 1px solid var(--border);
+        z-index: 10;
+      }
+      .brand {
+        font-weight: 800;
+        letter-spacing: 0.5px;
+        font-size: 20px;
+      }
+      .subtle { color: var(--muted); font-size: 14px; }
+      main { max-width: 720px; margin: 0 auto; padding: 16px; }
+      .card {
+        background: var(--card);
+        border: 1px solid var(--border);
+        border-radius: 14px;
+        padding: 16px;
+        box-shadow: 0 2px 10px rgba(0,0,0,0.04);
+      }
+      .list { display: grid; gap: 12px; }
+      .survey-item {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 16px;
+        border-radius: 12px;
+        background: #ffffff;
+        border: 1px solid var(--border);
+        box-shadow: 0 1px 6px rgba(0,0,0,0.04);
+      }
+      .survey-item button {
+        font-size: 18px; font-weight: 700; padding: 12px 16px;
+        border-radius: 10px; border: 1px solid var(--border);
+        background: var(--accent); color: #ffffff; cursor: pointer;
+      }
+      .survey-item h3 { margin: 0 0 4px 0; font-size: 18px; }
+      .survey-item p { margin: 0; color: var(--muted); font-size: 14px; }
+
+      /* Runner */
+      .runner { display: none; }
+      .progress {
+        margin: 8px 0 16px;
+        height: 10px; background: #e5e7eb; border-radius: 999px;
+        border: 1px solid var(--border);
+        overflow: hidden;
+      }
+      .bar { height: 100%; width: 0%; background: var(--accent); }
+      .q {
+        font-size: 22px; line-height: 1.3; margin: 12px 0 20px;
+      }
+      .info-text {
+        font-size: 18px; line-height: 1.6; margin: 16px 0;
+        white-space: pre-line;
+        text-align: left;
+      }
+      .definition {
+        font-style: italic;
+        color: var(--muted);
+      }
+      .section-header {
+        font-size: 24px; font-weight: 700; margin: 20px 0 16px 0;
+        color: var(--accent);
+        text-align: center;
+      }
+      .options { display: grid; gap: 10px; }
+      .opt {
+        display: block; width: 100%; text-align: left; cursor: pointer;
+        padding: 16px; border-radius: 12px; border: 1px solid var(--border);
+        background: #ffffff; font-size: 18px;
+      }
+      .opt.selected { outline: 2px solid var(--accent); background: #eff6ff; }
+      .controls { display: flex; gap: 10px; margin-top: 20px; }
+      .btn { flex: 1; padding: 14px 16px; font-size: 18px; font-weight: 700; border-radius: 12px; cursor: pointer; border: 1px solid var(--border); }
+      .btn.primary { background: var(--accent); color: #ffffff; }
+      .btn.secondary { background: #ffffff; color: var(--fg); }
+      .btn:disabled { opacity: .5; cursor: not-allowed; }
+      input[type="number"], input[type="text"], input[type="email"], input[type="url"], input[type="tel"], input[type="date"], input[type="time"], textarea {
+        width: 100%; padding: 14px; font-size: 18px; border-radius: 12px;
+        background: #ffffff; border: 1px solid var(--border); color: var(--fg);
+      }
+      textarea { min-height: 120px; resize: vertical; }
+      .tiny { font-size: 12px; color: var(--muted); }
+      .center { text-align: center; }
+      .spacer { height: 10px; }
+      .hidden { display: none; }
+      a { color: var(--accent); text-decoration: none; }
+      .pill { display:inline-block; padding:4px 10px; border:1px solid var(--border); border-radius:999px; font-size:12px; color:var(--muted); }
+    </style>
+  </head>
+  <body>
+    <header>
+      <div class="brand" title="Pausa — encuestas">pausa</div>
+      <!-- En el futuro aquí podemos poner un enlace de admin o información -->
+    </header>
+    <main>
+      <section id="home" class="card">
+        <h2 style="margin:0 0 12px 0; font-size:22px;">Encuestas disponibles</h2>
+        <div class="list" id="surveyList"></div>
+        <div class="spacer"></div>
+        <div class="tiny">Cualquiera puede responder. Datos anónimos. Hecho para móviles.</div>
+      </section>
+
+      <section id="runner" class="card runner">
+        <div id="meta"></div>
+        <div class="progress"><div class="bar" id="bar"></div></div>
+        <div id="question"></div>
+        <div id="options" class="options"></div>
+        <div id="controls" class="controls"></div>
+        <div class="tiny" id="footnote"></div>
+      </section>
+    </main>
+
+    <script type="module">
+      import { initializeApp } from "https://www.gstatic.com/firebasejs/12.1.0/firebase-app.js";
+      import { getAnalytics } from "https://www.gstatic.com/firebasejs/12.1.0/firebase-analytics.js";
+      import { getFirestore, collection, addDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/12.1.0/firebase-firestore.js";
+
+      // Configuración del nuevo proyecto Firebase específico para Pausa
+      const firebaseConfig = {
+        apiKey: "AIzaSyA09PTOAdqFWqY86hJVYsx5kfPwlTJI0Bc",
+        authDomain: "pausa-39df2.firebaseapp.com",
+        projectId: "pausa-39df2",
+        storageBucket: "pausa-39df2.firebasestorage.app",
+        messagingSenderId: "713583439467",
+        appId: "1:713583439467:web:6f965fd003afb796d50b2e"
+      };
+
+      const app = initializeApp(firebaseConfig);
+      try { getAnalytics(app); } catch (_) {}
+      const db = getFirestore(app);
+
+      const $home = document.getElementById('home');
+      const $list = document.getElementById('surveyList');
+      const $runner = document.getElementById('runner');
+      const $meta = document.getElementById('meta');
+      const $bar = document.getElementById('bar');
+      const $q = document.getElementById('question');
+      const $opts = document.getElementById('options');
+      const $ctrls = document.getElementById('controls');
+      const $foot = document.getElementById('footnote');
+
+      let survey = null;
+      let currentIndex = 0;
+      let answers = {};
+      let startTime = null;
+      let itemStartTime = null;
+      let itemTimes = {};
+
+      async function loadSurveyIndex() {
+        const res = await fetch('surveys/index.json?_=' + Date.now());
+        const data = await res.json();
+        return data.surveys || [];
+      }
+
+      function qsParam(name) {
+        const url = new URL(location.href);
+        return url.searchParams.get(name);
+      }
+
+      function showHome(items) {
+        // Mostrar header en home
+        document.querySelector('header').style.display = 'flex';
+        $home.style.display = 'block';
+        $runner.style.display = 'none';
+        $list.innerHTML = '';
+        items.forEach(item => {
+          const row = document.createElement('div');
+          row.className = 'survey-item';
+          row.innerHTML = `
+            <div>
+              <h3>${item.title}</h3>
+              <p>${item.description || ''}</p>
+            </div>
+            <div>
+              <button data-id="${item.id}">Comenzar</button>
+            </div>
+          `;
+          row.querySelector('button').addEventListener('click', () => {
+            const url = new URL(location.href);
+            url.searchParams.set('survey', item.id);
+            history.pushState({}, '', url);
+            startSurveyById(item.id, items);
+          });
+          $list.appendChild(row);
+        });
+      }
+
+      async function startSurveyById(id, indexData) {
+        const meta = (indexData || await loadSurveyIndex()).find(s => s.id === id);
+        if (!meta) {
+          alert('Encuesta no encontrada');
+          return;
+        }
+        const res = await fetch(`surveys/${meta.file}?_=${Date.now()}`);
+        const data = await res.json();
+        startSurvey(data);
+      }
+
+      function startSurvey(data) {
+        survey = data;
+        currentIndex = 0;
+        answers = {};
+        startTime = Date.now();
+        itemTimes = {};
+        $home.style.display = 'none';
+        $runner.style.display = 'block';
+        // Ocultar header mientras se responde
+        document.querySelector('header').style.display = 'none';
+        renderStep();
+      }
+
+      function renderStep() {
+        const total = survey.items.length;
+        const step = Math.min(currentIndex, total);
+        $bar.style.width = `${Math.round((step/total)*100)}%`;
+        $meta.innerHTML = `
+          <div class="subtle">${survey.title}</div>
+          <div class="tiny">${survey.description || ''}</div>
+        `;
+        $opts.innerHTML = '';
+        $ctrls.innerHTML = '';
+        $foot.innerHTML = '';
+
+        if (currentIndex >= total) {
+          // Pantalla de envío
+          $q.innerHTML = '<div class="q center">¿Listo para enviar?</div>';
+          const back = button('Volver', 'secondary');
+          back.onclick = () => { currentIndex = total - 1; renderStep(); };
+          const send = button('Enviar respuestas', 'primary');
+          send.onclick = submitResponses;
+          $ctrls.append(back, send);
+          return;
+        }
+
+        const item = survey.items[currentIndex];
+
+        // Tiempo por ítem
+        itemStartTime = Date.now();
+
+        // Páginas informativas (type=text, maxLength=1)
+        if (item.type === 'text' && item.maxLength === 1) {
+          if (item.prompt.includes('SECCIÓN')) {
+            const lines = item.prompt.split('\n');
+            const header = lines[0];
+            const content = lines.slice(1).join('\n').trim();
+            $q.innerHTML = `
+              <div class="section-header">${header}</div>
+              <div class="info-text">${content}</div>
+            `;
+          } else {
+            $q.innerHTML = `<div class="info-text">${item.prompt}</div>`;
+          }
+        } else {
+          $q.innerHTML = `<div class="q">${item.prompt}</div>`;
+        }
+
+        const goNext = () => {
+          if (itemStartTime && item) {
+            itemTimes[item.id] = Date.now() - itemStartTime;
+          }
+          currentIndex += 1;
+          renderStep();
+        };
+        const goPrev = () => {
+          if (itemStartTime && item) {
+            itemTimes[item.id] = Date.now() - itemStartTime;
+          }
+          currentIndex = Math.max(0, currentIndex - 1);
+          renderStep();
+        };
+
+        // Controles según tipo
+        if (item.type === 'likert' || item.type === 'single_choice') {
+          const options = normalizeOptions(item);
+          const selectedCode = answers[item.id] ?? null;
+          options.forEach(opt => {
+            const el = document.createElement('button');
+            el.className = 'opt' + (selectedCode === opt.code ? ' selected' : '');
+            el.textContent = opt.label;
+            el.onclick = () => {
+              answers[item.id] = opt.code;
+              el.classList.add('selected');
+              setTimeout(goNext, 120);
+            };
+            $opts.appendChild(el);
+          });
+          const back = button('Atrás', 'secondary');
+          back.onclick = goPrev;
+          const next = button('Siguiente', 'primary');
+          next.onclick = goNext;
+          $ctrls.append(back, next);
+        } else if (item.type === 'multi_choice') {
+          const options = normalizeOptions(item);
+          const prev = Array.isArray(answers[item.id]) ? new Set(answers[item.id]) : new Set();
+          options.forEach(opt => {
+            const el = document.createElement('button');
+            const isSel = prev.has(opt.code);
+            el.className = 'opt' + (isSel ? ' selected' : '');
+            el.textContent = opt.label;
+            el.onclick = () => {
+              if (prev.has(opt.code)) prev.delete(opt.code); else prev.add(opt.code);
+              el.classList.toggle('selected');
+            };
+            $opts.appendChild(el);
+          });
+          const back = button('Atrás', 'secondary');
+          back.onclick = goPrev;
+          const next = button('Siguiente', 'primary');
+          next.onclick = () => {
+            const arr = Array.from(prev);
+            if (item.required && arr.length === 0) return;
+            answers[item.id] = arr;
+            goNext();
+          };
+          $ctrls.append(back, next);
+        } else if (item.type === 'number') {
+          const input = document.createElement('input');
+          input.type = 'number';
+          input.inputMode = 'numeric';
+          input.placeholder = item.placeholder || '';
+          if (typeof item.min === 'number') input.min = String(item.min);
+          if (typeof item.max === 'number') input.max = String(item.max);
+          if (answers[item.id] != null) input.value = answers[item.id];
+          input.addEventListener('input', () => { answers[item.id] = input.value; });
+          $opts.appendChild(input);
+          const back = button('Atrás', 'secondary');
+          back.onclick = goPrev;
+          const next = button('Siguiente', 'primary');
+          next.onclick = () => {
+            if (item.required && (input.value === '' || isNaN(Number(input.value)))) return;
+            answers[item.id] = input.value === '' ? null : Number(input.value);
+            goNext();
+          };
+          $ctrls.append(back, next);
+        } else if (item.type === 'text') {
+          if (item.maxLength === 1) {
+            const back = button('Atrás', 'secondary');
+            back.onclick = goPrev;
+            const next = button('Siguiente', 'primary');
+            next.onclick = goNext;
+            $ctrls.append(back, next);
+          } else {
+            const input = document.createElement(item.long ? 'textarea' : 'input');
+            if (input.tagName.toLowerCase() === 'input') input.type = 'text';
+            input.placeholder = item.placeholder || '';
+            input.maxLength = item.maxLength || 500;
+            if (answers[item.id] != null) input.value = answers[item.id];
+            input.addEventListener('input', () => { answers[item.id] = input.value; });
+            $opts.appendChild(input);
+            const back = button('Atrás', 'secondary');
+            back.onclick = goPrev;
+            const next = button('Siguiente', 'primary');
+            next.onclick = () => {
+              if (item.required && (!answers[item.id] || String(answers[item.id]).trim() === '')) return;
+              goNext();
+            };
+            $ctrls.append(back, next);
+          }
+        } else if (item.type === 'email') {
+          const input = document.createElement('input');
+          input.type = 'email';
+          input.placeholder = item.placeholder || 'ejemplo@correo.com';
+          input.maxLength = item.maxLength || 100;
+          if (answers[item.id] != null) input.value = answers[item.id];
+          input.addEventListener('input', () => { answers[item.id] = input.value; });
+          $opts.appendChild(input);
+          const back = button('Atrás', 'secondary');
+          back.onclick = goPrev;
+          const next = button('Siguiente', 'primary');
+          next.onclick = () => {
+            if (item.required && (!answers[item.id] || String(answers[item.id]).trim() === '')) return;
+            goNext();
+          };
+          $ctrls.append(back, next);
+        } else if (item.type === 'url') {
+          const input = document.createElement('input');
+          input.type = 'url';
+          input.placeholder = item.placeholder || 'https://ejemplo.com';
+          input.maxLength = item.maxLength || 200;
+          if (answers[item.id] != null) input.value = answers[item.id];
+          input.addEventListener('input', () => { answers[item.id] = input.value; });
+          $opts.appendChild(input);
+          const back = button('Atrás', 'secondary');
+          back.onclick = goPrev;
+          const next = button('Siguiente', 'primary');
+          next.onclick = () => {
+            if (item.required && (!answers[item.id] || String(answers[item.id]).trim() === '')) return;
+            goNext();
+          };
+          $ctrls.append(back, next);
+        } else if (item.type === 'date') {
+          const input = document.createElement('input');
+          input.type = 'date';
+          if (answers[item.id] != null) input.value = answers[item.id];
+          input.addEventListener('change', () => { answers[item.id] = input.value; });
+          $opts.appendChild(input);
+          const back = button('Atrás', 'secondary');
+          back.onclick = goPrev;
+          const next = button('Siguiente', 'primary');
+          next.onclick = () => {
+            if (item.required && (!answers[item.id] || String(answers[item.id]).trim() === '')) return;
+            goNext();
+          };
+          $ctrls.append(back, next);
+        } else if (item.type === 'time') {
+          const input = document.createElement('input');
+          input.type = 'time';
+          if (answers[item.id] != null) input.value = answers[item.id];
+          input.addEventListener('change', () => { answers[item.id] = input.value; });
+          $opts.appendChild(input);
+          const back = button('Atrás', 'secondary');
+          back.onclick = goPrev;
+          const next = button('Siguiente', 'primary');
+          next.onclick = () => {
+            if (item.required && (!answers[item.id] || String(answers[item.id]).trim() === '')) return;
+            goNext();
+          };
+          $ctrls.append(back, next);
+        } else if (item.type === 'rating') {
+          const scale = item.scale || 5;
+          const selected = answers[item.id] || null;
+          const container = document.createElement('div');
+          container.style.display = 'flex';
+          container.style.gap = '8px';
+          container.style.justifyContent = 'center';
+          container.style.flexWrap = 'wrap';
+
+          for (let i = 1; i <= scale; i++) {
+            const btn = document.createElement('button');
+            btn.className = 'opt' + (selected === i ? ' selected' : '');
+            btn.textContent = i;
+            btn.style.minWidth = '50px';
+            btn.style.height = '50px';
+            btn.style.borderRadius = '50%';
+            btn.onclick = () => {
+              answers[item.id] = i;
+              container.querySelectorAll('button').forEach(b => b.classList.remove('selected'));
+              btn.classList.add('selected');
+            };
+            container.appendChild(btn);
+          }
+          $opts.appendChild(container);
+          const back = button('Atrás', 'secondary');
+          back.onclick = goPrev;
+          const next = button('Siguiente', 'primary');
+          next.onclick = () => {
+            if (item.required && answers[item.id] == null) return;
+            goNext();
+          };
+          $ctrls.append(back, next);
+        } else if (item.type === 'slider') {
+          const container = document.createElement('div');
+          const slider = document.createElement('input');
+          slider.type = 'range';
+          slider.min = item.min || 0;
+          slider.max = item.max || 100;
+          slider.step = item.step || 1;
+          slider.value = answers[item.id] || slider.min;
+          const valueDisplay = document.createElement('div');
+          valueDisplay.style.textAlign = 'center';
+          valueDisplay.style.fontSize = '18px';
+          valueDisplay.style.fontWeight = '700';
+          valueDisplay.style.marginTop = '8px';
+          valueDisplay.textContent = slider.value;
+
+          slider.addEventListener('input', () => {
+            answers[item.id] = Number(slider.value);
+            valueDisplay.textContent = slider.value;
+          });
+
+          container.appendChild(slider);
+          container.appendChild(valueDisplay);
+          $opts.appendChild(container);
+          const back = button('Atrás', 'secondary');
+          back.onclick = goPrev;
+          const next = button('Siguiente', 'primary');
+          next.onclick = () => {
+            if (item.required && answers[item.id] == null) return;
+            goNext();
+          };
+          $ctrls.append(back, next);
+        } else if (item.type === 'yes_no') {
+          const options = [
+            { label: 'Sí', code: 'yes' },
+            { label: 'No', code: 'no' }
+          ];
+          const selectedCode = answers[item.id] ?? null;
+          options.forEach(opt => {
+            const el = document.createElement('button');
+            el.className = 'opt' + (selectedCode === opt.code ? ' selected' : '');
+            el.textContent = opt.label;
+            el.onclick = () => {
+              answers[item.id] = opt.code;
+              el.classList.add('selected');
+              setTimeout(goNext, 120);
+            };
+            $opts.appendChild(el);
+          });
+          const back = button('Atrás', 'secondary');
+          back.onclick = goPrev;
+          const next = button('Siguiente', 'primary');
+          next.onclick = goNext;
+          $ctrls.append(back, next);
+        } else if (item.type === 'phone') {
+          const input = document.createElement('input');
+          input.type = 'tel';
+          input.placeholder = item.placeholder || '+34 123 456 789';
+          input.maxLength = item.maxLength || 20;
+          if (answers[item.id] != null) input.value = answers[item.id];
+          input.addEventListener('input', () => { answers[item.id] = input.value; });
+          $opts.appendChild(input);
+          const back = button('Atrás', 'secondary');
+          back.onclick = goPrev;
+          const next = button('Siguiente', 'primary');
+          next.onclick = () => {
+            if (item.required && (!answers[item.id] || String(answers[item.id]).trim() === '')) return;
+            goNext();
+          };
+          $ctrls.append(back, next);
+        } else if (item.type === 'file') {
+          const input = document.createElement('input');
+          input.type = 'file';
+          input.accept = item.accept || '*/*';
+          input.multiple = item.multiple || false;
+          input.addEventListener('change', () => {
+            if (input.files.length > 0) {
+              const files = Array.from(input.files).map(f => f.name);
+              answers[item.id] = files;
+            } else {
+              answers[item.id] = null;
+            }
+          });
+          $opts.appendChild(input);
+          const back = button('Atrás', 'secondary');
+          back.onclick = goPrev;
+          const next = button('Siguiente', 'primary');
+          next.onclick = () => {
+            if (item.required && !answers[item.id]) return;
+            goNext();
+          };
+          $ctrls.append(back, next);
+        } else {
+          $opts.innerHTML = '<div class="tiny">Tipo de ítem no soportado: ' + item.type + '</div>';
+        }
+
+        if (item.help) {
+          $foot.innerText = item.help;
+        }
+      }
+
+      function button(label, kind) {
+        const b = document.createElement('button');
+        b.className = `btn ${kind}`;
+        b.textContent = label;
+        return b;
+      }
+
+      function normalizeOptions(item) {
+        if (!Array.isArray(item.options)) return [];
+        return item.options.map((opt, idx) => {
+          if (typeof opt === 'string') return { label: opt, code: idx + 1 };
+          const label = opt.label ?? String(opt.code ?? opt.value ?? opt);
+          const code = opt.code ?? opt.value ?? (idx + 1);
+          return { label, code };
+        });
+      }
+
+      async function submitResponses() {
+        const urlParams = new URLSearchParams(location.search);
+        const serverCode = urlParams.get('srv') || urlParams.get('iden') || null;
+
+        const totalTime = startTime ? Date.now() - startTime : null;
+
+        const browserData = {
+          userAgent: navigator.userAgent,
+          language: navigator.language,
+          platform: navigator.platform,
+          cookieEnabled: navigator.cookieEnabled,
+          onLine: navigator.onLine,
+          screenWidth: screen.width,
+          screenHeight: screen.height,
+          screenColorDepth: screen.colorDepth,
+          timezone: Intl.DateTimeFormat().resolvedOptions().timeZone,
+          timestamp: new Date().toISOString(),
+          referrer: document.referrer,
+          url: location.href
+        };
+
+        const payload = {
+          surveyId: survey.id,
+          answers,
+          serverCode,
+          totalTime,
+          itemTimes,
+          browserData,
+          createdAt: serverTimestamp(),
+          ua: navigator.userAgent,
+          path: location.pathname + location.search,
+        };
+        try {
+          const col = collection(db, `responses/${survey.id}/entries`);
+          await addDoc(col, payload);
+          $q.innerHTML = '<div class="q center">¡Muchas gracias por tu participación!</div><div class="info-text center">Tus respuestas contribuirán a este proyecto en Pausa.\n\nAnte cualquier duda o consulta, puedes contactarte con el responsable.</div>';
+          $opts.innerHTML = '';
+          $ctrls.innerHTML = '';
+          $foot.innerHTML = '';
+        } catch (e) {
+          alert('Error al enviar. Intenta de nuevo.');
+          console.error(e);
+        }
+      }
+
+      // Boot
+      (async function init() {
+        const items = await loadSurveyIndex();
+        const selected = qsParam('survey');
+        if (selected) {
+          startSurveyById(selected, items);
+        } else {
+          showHome(items);
+        }
+        document.body.style.paddingBottom = '24px';
+      })();
+    </script>
+  </body>
+  </html>
+

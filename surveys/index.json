@@ -1,0 +1,11 @@
+{
+  "surveys": [
+    {
+      "id": "pausa_sample",
+      "title": "Encuesta de ejemplo Pausa",
+      "description": "Cuestionario corto para probar el flujo y la apariencia.",
+      "file": "pausa_sample.json"
+    }
+  ]
+}
+
