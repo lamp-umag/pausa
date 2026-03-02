@@ -1,0 +1,2 @@
+# pausa
+Repositorio Proyecto PAUSA
