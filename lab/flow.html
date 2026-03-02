@@ -1,0 +1,449 @@
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Pausa Flow — Touch Survey Lab</title>
+    <meta
+      name="description"
+      content="Versión experimental de formulario táctil para encuestas Pausa."
+    />
+    <style>
+      :root {
+        --bg-0: #020617;
+        --bg-1: #0f172a;
+        --bg-2: #082f49;
+        --fg: #e5e7eb;
+        --muted: #9ca3af;
+        --accent: #38bdf8;
+        --accent-soft: rgba(56, 189, 248, 0.18);
+        --accent-strong: #0ea5e9;
+        --error: #fb7185;
+        --card: rgba(15, 23, 42, 0.94);
+        --radius-lg: 24px;
+        --shadow-lg: 0 22px 60px rgba(15, 23, 42, 0.8);
+        --border-subtle: rgba(148, 163, 184, 0.28);
+        --transition-med: 220ms cubic-bezier(0.22, 0.61, 0.36, 1);
+      }
+
+      * {
+        box-sizing: border-box;
+        -webkit-tap-highlight-color: transparent;
+      }
+
+      html,
+      body {
+        height: 100%;
+        margin: 0;
+      }
+
+      body {
+        font-family: system-ui, -apple-system, BlinkMacSystemFont, "SF Pro Text",
+          "Segoe UI", sans-serif;
+        background: radial-gradient(circle at 0 0, #22c55e15 0, transparent 55%),
+          radial-gradient(circle at 100% 0, #38bdf815 0, transparent 55%),
+          radial-gradient(circle at 50% 100%, #6366f115 0, #020617 60%);
+        color: var(--fg);
+        display: flex;
+        justify-content: center;
+        align-items: stretch;
+        padding: 8px;
+      }
+
+      .phone-frame {
+        width: 100%;
+        max-width: 420px;
+        border-radius: 34px;
+        padding: 6px;
+        background: linear-gradient(
+          135deg,
+          rgba(148, 163, 184, 0.8),
+          rgba(56, 189, 248, 0.9)
+        );
+        box-shadow: 0 25px 80px rgba(15, 23, 42, 0.9);
+        display: flex;
+        align-items: stretch;
+      }
+
+      .phone-inner {
+        position: relative;
+        flex: 1;
+        border-radius: 28px;
+        overflow: hidden;
+        background: radial-gradient(circle at top, var(--bg-2), var(--bg-0));
+        display: flex;
+        flex-direction: column;
+      }
+
+      .glass-header {
+        position: relative;
+        padding: 10px 14px 4px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 8px;
+      }
+
+      .brand-chip {
+        display: inline-flex;
+        align-items: center;
+        gap: 7px;
+        padding: 4px 9px;
+        border-radius: 999px;
+        background: rgba(15, 23, 42, 0.6);
+        border: 1px solid rgba(148, 163, 184, 0.55);
+      }
+      .brand-dot {
+        width: 8px;
+        height: 8px;
+        border-radius: 999px;
+        background: radial-gradient(circle at 30% 0, #a5b4fc, #22c55e);
+      }
+      .brand-chip span {
+        font-size: 11px;
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
+        color: var(--muted);
+      }
+
+      .theme-switch {
+        display: inline-flex;
+        align-items: center;
+        gap: 4px;
+        padding: 3px;
+        border-radius: 999px;
+        background: rgba(15, 23, 42, 0.75);
+        border: 1px solid rgba(148, 163, 184, 0.4);
+      }
+      .theme-pill {
+        border-radius: 999px;
+        border: none;
+        background: transparent;
+        color: var(--muted);
+        font-size: 10px;
+        padding: 2px 8px;
+        cursor: pointer;
+        transition: background var(--transition-med), color var(--transition-med),
+          transform 0.1s ease-out;
+      }
+      .theme-pill[data-active="true"] {
+        background: rgba(56, 189, 248, 0.18);
+        color: var(--fg);
+        transform: translateY(-1px);
+      }
+
+      .meta-row {
+        padding: 0 16px 6px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        gap: 10px;
+      }
+      .survey-title {
+        font-size: 14px;
+        font-weight: 600;
+      }
+      .survey-sub {
+        font-size: 11px;
+        color: var(--muted);
+      }
+      .step-pill {
+        font-size: 11px;
+        color: var(--muted);
+        padding: 3px 8px;
+        border-radius: 999px;
+        border: 1px solid rgba(148, 163, 184, 0.5);
+        background: rgba(15, 23, 42, 0.75);
+      }
+
+      .progress-dots {
+        display: flex;
+        gap: 4px;
+        padding: 0 16px 10px;
+      }
+      .dot {
+        width: 5px;
+        height: 5px;
+        border-radius: 999px;
+        background: rgba(148, 163, 184, 0.45);
+        transition: width var(--transition-med), background var(--transition-med),
+          opacity var(--transition-med);
+        opacity: 0.4;
+      }
+      .dot[data-active="true"] {
+        width: 18px;
+        background: var(--accent-strong);
+        opacity: 1;
+      }
+
+      .flow-main {
+        flex: 1;
+        display: flex;
+        align-items: stretch;
+        justify-content: center;
+        padding: 4px 10px 10px;
+      }
+
+      .track {
+        position: relative;
+        width: 100%;
+        overflow: hidden;
+      }
+
+      .card-stack {
+        position: relative;
+        width: 100%;
+        height: 100%;
+      }
+
+      .card {
+        position: absolute;
+        inset: 0;
+        border-radius: var(--radius-lg);
+        background: var(--card);
+        border: 1px solid var(--border-subtle);
+        box-shadow: var(--shadow-lg);
+        padding: 16px 14px 12px;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        transform: translateX(40px) translateY(8px) scale(0.96);
+        opacity: 0;
+        pointer-events: none;
+        transition: transform var(--transition-med), opacity var(--transition-med);
+      }
+      .card[data-state="active"] {
+        opacity: 1;
+        pointer-events: auto;
+        transform: translateX(0) translateY(0) scale(1);
+      }
+      .card[data-state="exit-left"] {
+        opacity: 0;
+        transform: translateX(-45px) translateY(-4px) scale(0.95);
+      }
+      .card[data-state="exit-right"] {
+        opacity: 0;
+        transform: translateX(45px) translateY(4px) scale(0.95);
+      }
+      .card[data-state="behind"] {
+        opacity: 0.2;
+        transform: translateX(18px) translateY(8px) scale(0.97);
+      }
+
+      .q-label {
+        font-size: 11px;
+        color: var(--muted);
+        margin-bottom: 4px;
+      }
+      .q-main {
+        font-size: 18px;
+        line-height: 1.4;
+        margin-bottom: 10px;
+      }
+      .q-help {
+        font-size: 11px;
+        color: var(--muted);
+        margin-bottom: 10px;
+      }
+
+      .opt-grid {
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+      }
+
+      .pill-opt {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 8px;
+        border-radius: 999px;
+        padding: 9px 14px;
+        border: 1px solid rgba(148, 163, 184, 0.4);
+        background: rgba(15, 23, 42, 0.92);
+        color: var(--fg);
+        font-size: 14px;
+        cursor: pointer;
+        transition: background var(--transition-med),
+          border-color var(--transition-med), transform 0.1s ease-out,
+          box-shadow var(--transition-med), opacity var(--transition-med);
+      }
+      .pill-opt-main {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+      }
+      .pill-badge {
+        width: 18px;
+        height: 18px;
+        border-radius: 999px;
+        border: 1px solid rgba(148, 163, 184, 0.5);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 11px;
+        color: var(--muted);
+      }
+      .pill-opt[data-selected="true"] {
+        background: linear-gradient(
+          120deg,
+          rgba(56, 189, 248, 0.18),
+          rgba(37, 99, 235, 0.25)
+        );
+        border-color: var(--accent-strong);
+        box-shadow: 0 0 0 1px rgba(56, 189, 248, 0.35);
+        transform: translateY(-1px);
+      }
+
+      .field {
+        border-radius: 18px;
+        background: rgba(15, 23, 42, 0.92);
+        border: 1px solid rgba(148, 163, 184, 0.5);
+        padding: 8px 10px 6px;
+      }
+      .field-label {
+        font-size: 11px;
+        color: var(--muted);
+        margin-bottom: 2px;
+      }
+      .field-input,
+      .field-textarea {
+        width: 100%;
+        border: none;
+        outline: none;
+        background: transparent;
+        font-size: 15px;
+        color: var(--fg);
+        padding: 4px 0 2px;
+      }
+      .field-textarea {
+        resize: vertical;
+        min-height: 80px;
+      }
+
+      .bottom-bar {
+        padding: 6px 14px 12px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 10px;
+      }
+      .hint {
+        font-size: 10px;
+        color: var(--muted);
+      }
+      .nav-buttons {
+        display: inline-flex;
+        gap: 6px;
+      }
+      .nav-small {
+        border-radius: 999px;
+        border: 1px solid rgba(148, 163, 184, 0.4);
+        background: rgba(15, 23, 42, 0.9);
+        color: var(--fg);
+        font-size: 11px;
+        padding: 5px 10px;
+        cursor: pointer;
+        display: inline-flex;
+        align-items: center;
+        gap: 4px;
+        transition: background var(--transition-med),
+          border-color var(--transition-med), transform 0.1s ease-out,
+          opacity 0.12s;
+      }
+      .nav-small.primary {
+        background: linear-gradient(
+          135deg,
+          var(--accent-strong),
+          rgba(129, 140, 248, 0.95)
+        );
+        border-color: transparent;
+        box-shadow: 0 10px 30px rgba(56, 189, 248, 0.45);
+      }
+      .nav-small:active {
+        transform: translateY(1px);
+        box-shadow: none;
+      }
+      .nav-small[disabled] {
+        opacity: 0.4;
+        box-shadow: none;
+      }
+
+      @media (max-width: 480px) {
+        body {
+          padding: 4px;
+        }
+        .phone-frame {
+          max-width: 100%;
+          border-radius: 0;
+        }
+        .phone-inner {
+          border-radius: 24px;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="phone-frame">
+      <div class="phone-inner" id="phoneInner">
+        <div class="glass-header">
+          <div class="brand-chip">
+            <span class="brand-dot"></span>
+            <span>Pausa Flow</span>
+          </div>
+          <div class="theme-switch">
+            <button class="theme-pill" data-theme="deep" data-active="true">
+              Deep
+            </button>
+            <button class="theme-pill" data-theme="soft">Soft</button>
+            <button class="theme-pill" data-theme="sunset">Sunset</button>
+          </div>
+        </div>
+
+        <div class="meta-row">
+          <div>
+            <div class="survey-title" id="metaTitle">Cargando…</div>
+            <div class="survey-sub" id="metaDesc"></div>
+          </div>
+          <div class="step-pill" id="stepPill">0 / 0</div>
+        </div>
+
+        <div class="progress-dots" id="dots"></div>
+
+        <main class="flow-main">
+          <div class="track">
+            <div class="card-stack">
+              <article class="card" id="card">
+                <header>
+                  <div class="q-label" id="qLabel">Pregunta</div>
+                  <div class="q-main" id="qMain">
+                    …
+                  </div>
+                  <div class="q-help" id="qHelp"></div>
+                </header>
+                <section class="opt-grid" id="options"></section>
+              </article>
+            </div>
+          </div>
+        </main>
+
+        <footer class="bottom-bar">
+          <div class="hint" id="hint">
+            Toca una opción o desliza para avanzar.
+          </div>
+          <div class="nav-buttons">
+            <button class="nav-small" id="btnBack">
+              ←
+            </button>
+            <button class="nav-small primary" id="btnNext">
+              Siguiente →
+            </button>
+          </div>
+        </footer>
+      </div>
+    </div>
+
+    <script type="module" src="./flow.js"></script>
+  </body>
+  </html>
+

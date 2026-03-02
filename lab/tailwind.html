@@ -1,0 +1,388 @@
+<!DOCTYPE html>
+<html lang="es" data-theme="calm">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" />
+  <title>Pausa — encuestas</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            // Temas definidos vía CSS vars que se cambian dinámicamente
+          }
+        }
+      }
+    }
+  </script>
+  <style>
+    :root[data-theme="calm"] {
+      --bg: #f5f7f3;
+      --surface: #ffffff;
+      --foreground: #1a1a1a;
+      --muted: #6b7280;
+      --primary: #84a98c;
+      --primary-foreground: #ffffff;
+      --accent: #a8c5a8;
+      --border: #e5e7e0;
+    }
+    :root[data-theme="twilight"] {
+      --bg: #f5f3ff;
+      --surface: #ffffff;
+      --foreground: #1a1a1a;
+      --muted: #6b7280;
+      --primary: #8b5cf6;
+      --primary-foreground: #ffffff;
+      --accent: #a78bfa;
+      --border: #e9d5ff;
+    }
+    :root[data-theme="midnight"] {
+      --bg: #020617;
+      --surface: #0f172a;
+      --foreground: #e5e7eb;
+      --muted: #9ca3af;
+      --primary: #f97316;
+      --primary-foreground: #111827;
+      --accent: #fb923c;
+      --border: #1f2937;
+    }
+    :root[data-theme="paper"] {
+      --bg: #fefdf8;
+      --surface: #ffffff;
+      --foreground: #1a1a1a;
+      --muted: #6b7280;
+      --primary: #1a1a1a;
+      --primary-foreground: #ffffff;
+      --accent: #4a5568;
+      --border: #e5e7eb;
+    }
+    :root[data-theme="ocean"] {
+      --bg: #ecfeff;
+      --surface: #f9fafb;
+      --foreground: #0f172a;
+      --muted: #64748b;
+      --primary: #0891b2;
+      --primary-foreground: #ecfeff;
+      --accent: #0ea5e9;
+      --border: #bae6fd;
+    }
+    :root[data-theme="forest"] {
+      --bg: #f0fdf4;
+      --surface: #f9fafb;
+      --foreground: #052e16;
+      --muted: #4b5563;
+      --primary: #16a34a;
+      --primary-foreground: #f0fdf4;
+      --accent: #22c55e;
+      --border: #bbf7d0;
+    }
+    :root[data-theme="dusk"] {
+      --bg: #fdf2e9;
+      --surface: #fef9f5;
+      --foreground: #3f2a20;
+      --muted: #6b4f3f;
+      --primary: #f97316;
+      --primary-foreground: #fff7ed;
+      --accent: #fb923c;
+      --border: #fed7aa;
+    }
+    :root[data-theme="rose"] {
+      --bg: #fff7f8;
+      --surface: #fff1f2;
+      --foreground: #4a1f2a;
+      --muted: #7f4855;
+      --primary: #f97373;
+      --primary-foreground: #fff1f2;
+      --accent: #fb7185;
+      --border: #fecdd3;
+    }
+    [data-font-theme="editorial"] {
+      font-family: 'Georgia', 'Times New Roman', serif;
+    }
+    [data-font-theme="swiss"] {
+      font-family: 'Inter', system-ui, -apple-system, sans-serif;
+    }
+    [data-font-theme="modern"] {
+      font-family: system-ui, -apple-system, 'Segoe UI', sans-serif;
+    }
+    body {
+      background: var(--bg);
+      color: var(--foreground);
+      transition: background-color 0.4s cubic-bezier(0.16, 1, 0.3, 1), color 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+    .card {
+      background: var(--surface);
+      border-color: var(--border);
+      color: var(--foreground);
+    }
+    .btn-primary {
+      background: var(--primary);
+      color: var(--primary-foreground);
+    }
+    .btn-primary:hover {
+      background: var(--accent);
+    }
+    .text-muted {
+      color: var(--muted);
+    }
+    .border-color {
+      border-color: var(--border);
+    }
+    .bg-primary\/5 {
+      background-color: color-mix(in srgb, var(--primary) 5%, transparent);
+    }
+    .bg-primary\/10 {
+      background-color: color-mix(in srgb, var(--primary) 10%, transparent);
+    }
+    .shadow-primary {
+      box-shadow: 0 10px 40px -10px color-mix(in srgb, var(--primary) 20%, transparent);
+    }
+    .option-selected {
+      background: var(--primary);
+      color: var(--primary-foreground);
+      border-color: var(--primary);
+    }
+    .option-selected:hover {
+      background: var(--accent);
+    }
+    .theme-panel {
+      transform: translateY(100%);
+      transition: transform 0.5s cubic-bezier(0.32, 0.72, 0, 1);
+    }
+    .theme-panel.open {
+      transform: translateY(0);
+    }
+    .fade-in {
+      animation: fadeIn 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+    @keyframes fadeIn {
+      from {
+        opacity: 0;
+        transform: translateY(8px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+    .slide-out-left {
+      animation: slideOutLeft 0.3s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+    }
+    @keyframes slideOutLeft {
+      to {
+        opacity: 0;
+        transform: translateX(-20px);
+      }
+    }
+    .slide-in-right {
+      animation: slideInRight 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+    @keyframes slideInRight {
+      from {
+        opacity: 0;
+        transform: translateX(20px);
+      }
+      to {
+        opacity: 1;
+        transform: translateX(0);
+      }
+    }
+  </style>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body class="min-h-[100dvh] antialiased" data-font-theme="swiss">
+  <!-- Background blur effects -->
+  <div class="fixed inset-0 pointer-events-none overflow-hidden">
+    <div class="absolute top-0 left-1/2 -translate-x-1/2 w-[600px] h-[600px] rounded-full bg-primary/5 blur-3xl"></div>
+    <div class="absolute bottom-0 right-0 w-[400px] h-[400px] rounded-full bg-primary/10 blur-3xl"></div>
+  </div>
+
+  <!-- Main content -->
+  <main class="relative min-h-[100dvh] flex flex-col">
+    <div class="flex-1 flex items-center justify-center py-8 px-4">
+      <div class="w-full max-w-lg mx-auto">
+        <!-- Survey content -->
+        <div id="surveyCard" class="rounded-3xl p-2 sm:p-4 fade-in">
+          <div id="questionContainer" class="space-y-6">
+            <!-- Will be populated by JS -->
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <!-- Theme Lab button -->
+  <button id="themeLabBtn" class="fixed bottom-6 right-6 z-40 flex items-center gap-2.5 rounded-full px-5 py-3 btn-primary shadow-xl shadow-primary/15 hover:scale-105 active:scale-95 transition-all duration-200 ease-out">
+    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M12 22a1 1 0 0 1 0-20 10 9 0 0 1 10 9 5 5 0 0 1-5 5h-2.25a1.75 1.75 0 0 0-1.4 2.8l.3.4a1.75 1.75 0 0 1-1.4 2.8z"></path>
+      <circle cx="13.5" cy="6.5" r=".5" fill="currentColor"></circle>
+      <circle cx="17.5" cy="10.5" r=".5" fill="currentColor"></circle>
+      <circle cx="6.5" cy="12.5" r=".5" fill="currentColor"></circle>
+      <circle cx="8.5" cy="7.5" r=".5" fill="currentColor"></circle>
+    </svg>
+    <span class="text-sm font-semibold tracking-tight">Lab</span>
+  </button>
+
+  <!-- Backdrop -->
+  <div id="backdrop" class="fixed inset-0 z-50 bg-black/20 backdrop-blur-sm transition-opacity duration-300 opacity-0 pointer-events-none"></div>
+
+  <!-- Theme panel (bottom sheet) -->
+  <div id="themePanel" class="theme-panel fixed bottom-0 left-0 right-0 z-50 max-h-[80vh] card border-t border-color rounded-t-3xl overflow-hidden">
+    <div class="flex justify-center pt-3 pb-1">
+      <div class="h-1 w-10 rounded-full bg-muted/25"></div>
+    </div>
+    <div class="px-5 pb-8 pt-2 overflow-y-auto max-h-[calc(80vh-60px)]">
+      <div class="flex items-center justify-between mb-5">
+        <h2 class="text-base font-semibold tracking-tight">Theme Lab</h2>
+        <button id="closeThemeBtn" class="h-8 w-8 flex items-center justify-center rounded-full bg-primary/10 text-foreground hover:bg-primary/20 transition-colors">
+          <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M18 6 6 18"></path>
+            <path d="m6 6 12 12"></path>
+          </svg>
+        </button>
+      </div>
+
+      <!-- Tabs -->
+      <div class="flex bg-primary/5 rounded-xl p-1 mb-5">
+        <button data-tab="colors" class="tab-btn flex-1 flex items-center justify-center gap-2 py-2 rounded-lg text-sm font-medium transition-all duration-300 bg-surface text-foreground shadow-sm">
+          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M12 22a1 1 0 0 1 0-20 10 9 0 0 1 10 9 5 5 0 0 1-5 5h-2.25a1.75 1.75 0 0 0-1.4 2.8l.3.4a1.75 1.75 0 0 1-1.4 2.8z"></path>
+          </svg>
+          Colors
+        </button>
+        <button data-tab="fonts" class="tab-btn flex-1 flex items-center justify-center gap-2 py-2 rounded-lg text-sm font-medium transition-all duration-300 text-muted hover:text-foreground">
+          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M12 4v16"></path>
+            <path d="M4 7V5a1 1 0 0 1 1-1h14a1 1 0 0 1 1 1v2"></path>
+            <path d="M9 20h6"></path>
+          </svg>
+          Fonts
+        </button>
+      </div>
+
+      <!-- Colors tab -->
+      <div id="colorsTab" class="tab-content">
+        <div class="grid grid-cols-2 gap-2.5">
+          <button data-theme="calm" class="theme-btn flex items-center gap-3 p-3.5 rounded-2xl border-2 text-left transition-all duration-300 ease-out border-primary bg-primary/5">
+            <div class="flex items-center gap-1 shrink-0">
+              <div class="h-6 w-6 rounded-full ring-1 ring-border/50 bg-[#f5f7f3]"></div>
+              <div class="h-6 w-6 rounded-full ring-1 ring-border/50 bg-[#84a98c]"></div>
+            </div>
+            <div class="min-w-0">
+              <p class="text-xs font-semibold">Calm</p>
+              <p class="text-[10px] text-muted leading-tight">Sage + cream</p>
+            </div>
+          </button>
+          <button data-theme="twilight" class="theme-btn flex items-center gap-3 p-3.5 rounded-2xl border-2 text-left transition-all duration-300 ease-out border-transparent bg-primary/5 hover:bg-primary/10">
+            <div class="flex items-center gap-1 shrink-0">
+              <div class="h-6 w-6 rounded-full ring-1 ring-border/50 bg-[#f5f3ff]"></div>
+              <div class="h-6 w-6 rounded-full ring-1 ring-border/50 bg-[#8b5cf6]"></div>
+            </div>
+            <div class="min-w-0">
+              <p class="text-xs font-semibold">Twilight</p>
+              <p class="text-[10px] text-muted leading-tight">Lavender + soft</p>
+            </div>
+          </button>
+          <button data-theme="midnight" class="theme-btn flex items-center gap-3 p-3.5 rounded-2xl border-2 text-left transition-all duration-300 ease-out border-transparent bg-primary/5 hover:bg-primary/10">
+            <div class="flex items-center gap-1 shrink-0">
+              <div class="h-6 w-6 rounded-full ring-1 ring-border/50 bg-[#0f172a]"></div>
+              <div class="h-6 w-6 rounded-full ring-1 ring-border/50 bg-[#f97316]"></div>
+            </div>
+            <div class="min-w-0">
+              <p class="text-xs font-semibold">Midnight</p>
+              <p class="text-[10px] text-muted leading-tight">Navy + coral</p>
+            </div>
+          </button>
+          <button data-theme="paper" class="theme-btn flex items-center gap-3 p-3.5 rounded-2xl border-2 text-left transition-all duration-300 ease-out border-transparent bg-primary/5 hover:bg-primary/10">
+            <div class="flex items-center gap-1 shrink-0">
+              <div class="h-6 w-6 rounded-full ring-1 ring-border/50 bg-[#fefdf8]"></div>
+              <div class="h-6 w-6 rounded-full ring-1 ring-border/50 bg-[#1a1a1a]"></div>
+            </div>
+            <div class="min-w-0">
+              <p class="text-xs font-semibold">Paper</p>
+              <p class="text-[10px] text-muted leading-tight">Cream + ink</p>
+            </div>
+          </button>
+          <button data-theme="ocean" class="theme-btn flex items-center gap-3 p-3.5 rounded-2xl border-2 text-left transition-all duration-300 ease-out border-transparent bg-primary/5 hover:bg-primary/10">
+            <div class="flex items-center gap-1 shrink-0">
+              <div class="h-6 w-6 rounded-full ring-1 ring-border/50 bg-[#f0f9ff]"></div>
+              <div class="h-6 w-6 rounded-full ring-1 ring-border/50 bg-[#0891b2]"></div>
+            </div>
+            <div class="min-w-0">
+              <p class="text-xs font-semibold">Ocean</p>
+              <p class="text-[10px] text-muted leading-tight">Teal + cyan</p>
+            </div>
+          </button>
+          <button data-theme="forest" class="theme-btn flex items-center gap-3 p-3.5 rounded-2xl border-2 text-left transition-all duration-300 ease-out border-transparent bg-primary/5 hover:bg-primary/10">
+            <div class="flex items-center gap-1 shrink-0">
+              <div class="h-6 w-6 rounded-full ring-1 ring-border/50 bg-[#f0fdf4]"></div>
+              <div class="h-6 w-6 rounded-full ring-1 ring-border/50 bg-[#16a34a]"></div>
+            </div>
+            <div class="min-w-0">
+              <p class="text-xs font-semibold">Forest</p>
+              <p class="text-[10px] text-muted leading-tight">Greens + light</p>
+            </div>
+          </button>
+          <button data-theme="dusk" class="theme-btn flex items-center gap-3 p-3.5 rounded-2xl border-2 text-left transition-all duration-300 ease-out border-transparent bg-primary/5 hover:bg-primary/10">
+            <div class="flex items-center gap-1 shrink-0">
+              <div class="h-6 w-6 rounded-full ring-1 ring-border/50 bg-[#fdf2e9]"></div>
+              <div class="h-6 w-6 rounded-full ring-1 ring-border/50 bg-[#f97316]"></div>
+            </div>
+            <div class="min-w-0">
+              <p class="text-xs font-semibold">Dusk</p>
+              <p class="text-[10px] text-muted leading-tight">Warm evening</p>
+            </div>
+          </button>
+          <button data-theme="rose" class="theme-btn flex items-center gap-3 p-3.5 rounded-2xl border-2 text-left transition-all duration-300 ease-out border-transparent bg-primary/5 hover:bg-primary/10">
+            <div class="flex items-center gap-1 shrink-0">
+              <div class="h-6 w-6 rounded-full ring-1 ring-border/50 bg-[#fff7f8]"></div>
+              <div class="h-6 w-6 rounded-full ring-1 ring-border/50 bg-[#f97373]"></div>
+            </div>
+            <div class="min-w-0">
+              <p class="text-xs font-semibold">Rose</p>
+              <p class="text-[10px] text-muted leading-tight">Soft blush</p>
+            </div>
+          </button>
+        </div>
+      </div>
+
+      <!-- Fonts tab -->
+      <div id="fontsTab" class="tab-content hidden">
+        <div class="flex flex-col gap-2">
+          <button data-font="swiss" class="font-btn flex items-center justify-between p-3.5 rounded-2xl border-2 text-left transition-all duration-300 ease-out border-primary bg-primary/5">
+            <div class="min-w-0 flex-1">
+              <p class="text-xs font-semibold">Swiss</p>
+              <p class="text-[10px] text-muted leading-tight mt-0.5">Inter (clean geometric)</p>
+            </div>
+            <div class="h-2 w-2 rounded-full bg-primary shrink-0 ml-3"></div>
+          </button>
+          <button data-font="editorial" class="font-btn flex items-center justify-between p-3.5 rounded-2xl border-2 text-left transition-all duration-300 ease-out border-transparent bg-primary/5 hover:bg-primary/10">
+            <div class="min-w-0 flex-1">
+              <p class="text-xs font-semibold">Editorial</p>
+              <p class="text-[10px] text-muted leading-tight mt-0.5">Georgia + serif</p>
+            </div>
+          </button>
+          <button data-font="modern" class="font-btn flex items-center justify-between p-3.5 rounded-2xl border-2 text-left transition-all duration-300 ease-out border-transparent bg-primary/5 hover:bg-primary/10">
+            <div class="min-w-0 flex-1">
+              <p class="text-xs font-semibold">Modern</p>
+              <p class="text-[10px] text-muted leading-tight mt-0.5">System UI</p>
+            </div>
+          </button>
+        </div>
+      </div>
+
+      <div class="mt-5 flex items-center gap-2 text-[10px] text-muted/60">
+        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="m6 9 6 6 6-6"></path>
+        </svg>
+        <span>Tap outside to close</span>
+      </div>
+    </div>
+  </div>
+
+  <script type="module" src="./tailwind.js"></script>
+</body>
+</html>
