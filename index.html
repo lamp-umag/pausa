@@ -225,26 +225,26 @@
         cursor: pointer;
         padding: 16px; 
         border-radius: 12px; 
-        border: 2px solid #bae6fd;
-        background: #f9fafb !important; 
-        color: #0f172a;
-        font-size: 18px;
+        border: 2px solid var(--border);
+        background: transparent !important; 
+        color: var(--foreground);
+        font-size: 16px;
         font-weight: 500;
         transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
         margin: 0;
       }
       .opt:hover {
-        background: color-mix(in srgb, #0891b2 5%, #f9fafb) !important;
-        border-color: #0891b2;
+        background: color-mix(in srgb, var(--primary) 5%, transparent) !important;
+        border-color: var(--primary);
       }
       .opt.selected { 
-        background: #0891b2 !important;
-        color: #ecfeff !important;
-        border-color: #0891b2 !important;
+        background: var(--primary) !important;
+        color: var(--primary-foreground) !important;
+        border-color: var(--primary) !important;
       }
       .opt.selected:hover {
-        background: #0ea5e9 !important;
-        border-color: #0ea5e9 !important;
+        background: var(--accent) !important;
+        border-color: var(--accent) !important;
       }
       .controls { 
         display: flex; 
@@ -255,7 +255,7 @@
       .btn { 
         flex: 1; 
         padding: 12px 24px; 
-        font-size: 18px; 
+        font-size: 16px; 
         font-weight: 500; 
         border-radius: 12px; 
         cursor: pointer; 
@@ -275,13 +275,13 @@
         transform: scale(0.98);
       }
       .btn.secondary { 
-        background: #f9fafb !important; 
-        color: #0f172a !important; 
-        border: 1px solid #bae6fd !important;
+        background: transparent !important; 
+        color: var(--foreground) !important; 
+        border: 1px solid var(--border) !important;
       }
       .btn.secondary:hover { 
-        background: color-mix(in srgb, #0891b2 5%, #f9fafb) !important; 
-        border-color: #0891b2 !important;
+        background: color-mix(in srgb, var(--primary) 5%, transparent) !important; 
+        border-color: var(--primary) !important;
       }
       .btn:disabled { 
         opacity: .5; 
@@ -327,6 +327,17 @@
         }
       }
       .pill { display:inline-block; padding:4px 10px; border:1px solid var(--border); border-radius:999px; font-size:12px; color:var(--muted); }
+      /* Normalización básica de botones para aproximar el reset de Tailwind */
+      button {
+        font-family: inherit;
+        font-size: inherit;
+        line-height: inherit;
+        color: inherit;
+        margin: 0;
+        border: none;
+        background: transparent;
+        padding: 0;
+      }
     </style>
   </head>
   <body>

@@ -203,9 +203,9 @@ export function createSurveyApp({ db, elements }) {
         };
         optionsContainer.appendChild(el);
       });
-      const back = button('Atrás', 'secondary');
+      const back = button('← Atrás', 'secondary');
       back.onclick = goPrev;
-      const next = button('Siguiente', 'primary');
+      const next = button('Siguiente →', 'primary');
       next.onclick = goNext;
       controlsContainer.append(back, next);
       return;
@@ -225,9 +225,9 @@ export function createSurveyApp({ db, elements }) {
         };
         optionsContainer.appendChild(el);
       });
-      const back = button('Atrás', 'secondary');
+      const back = button('← Atrás', 'secondary');
       back.onclick = goPrev;
-      const next = button('Siguiente', 'primary');
+      const next = button('Siguiente →', 'primary');
       next.onclick = () => {
         const arr = Array.from(prev);
         if (item.required && arr.length === 0) return;
@@ -248,9 +248,9 @@ export function createSurveyApp({ db, elements }) {
       if (answers[item.id] != null) input.value = answers[item.id];
       input.addEventListener('input', () => { answers[item.id] = input.value; });
       optionsContainer.appendChild(input);
-      const back = button('Atrás', 'secondary');
+      const back = button('← Atrás', 'secondary');
       back.onclick = goPrev;
-      const next = button('Siguiente', 'primary');
+      const next = button('Siguiente →', 'primary');
       next.onclick = () => {
         if (item.required && (input.value === '' || isNaN(Number(input.value)))) return;
         answers[item.id] = input.value === '' ? null : Number(input.value);
@@ -262,9 +262,9 @@ export function createSurveyApp({ db, elements }) {
 
     // Tipo 'info': solo muestra texto, no requiere input
     if (item.type === 'info') {
-      const back = button('Atrás', 'secondary');
+      const back = button('← Atrás', 'secondary');
       back.onclick = goPrev;
-      const next = button('Siguiente', 'primary');
+      const next = button('Siguiente →', 'primary');
       next.onclick = goNext;
       controlsContainer.append(back, next);
       return;
@@ -279,9 +279,9 @@ export function createSurveyApp({ db, elements }) {
       if (answers[item.id] != null) input.value = answers[item.id];
       input.addEventListener('input', () => { answers[item.id] = input.value; });
       optionsContainer.appendChild(input);
-      const back = button('Atrás', 'secondary');
+      const back = button('← Atrás', 'secondary');
       back.onclick = goPrev;
-      const next = button('Siguiente', 'primary');
+      const next = button('Siguiente →', 'primary');
       next.onclick = () => {
         if (item.required && (!answers[item.id] || String(answers[item.id]).trim() === '')) return;
         goNext();
@@ -298,9 +298,9 @@ export function createSurveyApp({ db, elements }) {
       if (answers[item.id] != null) input.value = answers[item.id];
       input.addEventListener('input', () => { answers[item.id] = input.value; });
       optionsContainer.appendChild(input);
-      const back = button('Atrás', 'secondary');
+      const back = button('← Atrás', 'secondary');
       back.onclick = goPrev;
-      const next = button('Siguiente', 'primary');
+      const next = button('Siguiente →', 'primary');
       next.onclick = () => {
         if (item.required && (!answers[item.id] || String(answers[item.id]).trim() === '')) return;
         goNext();
@@ -317,9 +317,9 @@ export function createSurveyApp({ db, elements }) {
       if (answers[item.id] != null) input.value = answers[item.id];
       input.addEventListener('input', () => { answers[item.id] = input.value; });
       optionsContainer.appendChild(input);
-      const back = button('Atrás', 'secondary');
+      const back = button('← Atrás', 'secondary');
       back.onclick = goPrev;
-      const next = button('Siguiente', 'primary');
+      const next = button('Siguiente →', 'primary');
       next.onclick = () => {
         if (item.required && (!answers[item.id] || String(answers[item.id]).trim() === '')) return;
         goNext();
@@ -334,9 +334,9 @@ export function createSurveyApp({ db, elements }) {
       if (answers[item.id] != null) input.value = answers[item.id];
       input.addEventListener('change', () => { answers[item.id] = input.value; });
       optionsContainer.appendChild(input);
-      const back = button('Atrás', 'secondary');
+      const back = button('← Atrás', 'secondary');
       back.onclick = goPrev;
-      const next = button('Siguiente', 'primary');
+      const next = button('Siguiente →', 'primary');
       next.onclick = () => {
         if (item.required && (!answers[item.id] || String(answers[item.id]).trim() === '')) return;
         goNext();
@@ -351,9 +351,9 @@ export function createSurveyApp({ db, elements }) {
       if (answers[item.id] != null) input.value = answers[item.id];
       input.addEventListener('change', () => { answers[item.id] = input.value; });
       optionsContainer.appendChild(input);
-      const back = button('Atrás', 'secondary');
+      const back = button('← Atrás', 'secondary');
       back.onclick = goPrev;
-      const next = button('Siguiente', 'primary');
+      const next = button('Siguiente →', 'primary');
       next.onclick = () => {
         if (item.required && (!answers[item.id] || String(answers[item.id]).trim() === '')) return;
         goNext();
@@ -385,7 +385,7 @@ export function createSurveyApp({ db, elements }) {
       container.appendChild(slider);
       container.appendChild(valueDisplay);
       optionsContainer.appendChild(container);
-      const back = button('Atrás', 'secondary');
+      const back = button('← Atrás', 'secondary');
       back.onclick = goPrev;
       const next = button('Siguiente', 'primary');
       next.onclick = () => {
