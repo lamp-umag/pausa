@@ -124,12 +124,7 @@ export function createSurveyApp({ db, elements }) {
     const step = Math.min(currentIndex, total);
     const percent = Math.round((step / total) * 100);
     bar.style.width = `${percent}%`;
-    metaContainer.innerHTML = `
-      <div style="display: flex; align-items: center; justify-content: space-between; font-size: 12px; color: var(--muted); margin-bottom: 8px;">
-        <span>Pregunta ${step} de ${total}</span>
-        <span>${percent}%</span>
-      </div>
-    `;
+    metaContainer.innerHTML = '';
     optionsContainer.innerHTML = '';
     controlsContainer.innerHTML = '';
     footnoteContainer.innerHTML = '';
@@ -149,10 +144,14 @@ export function createSurveyApp({ db, elements }) {
 
     // Tipo 'info': solo muestra texto informativo (sin input)
     if (item.type === 'info') {
-      if (item.prompt.includes('SECCIÓN')) {
-        const lines = item.prompt.split('\n');
-        const headerText = lines[0];
-        const content = lines.slice(1).join('\n').trim();
+      const lines = item.prompt.split('\n');
+      const headerText = lines[0];
+      const content = lines.slice(1).join('\n').trim();
+      const isSectionHeader =
+        headerText.startsWith('SECCIÓN') ||
+        headerText === 'Proyecto PAUSA';
+
+      if (isSectionHeader) {
         questionContainer.innerHTML = `
           <div class="section-header">${headerText}</div>
           <div class="info-text">${content}</div>

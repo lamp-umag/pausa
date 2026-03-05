@@ -4,6 +4,11 @@
   "description": "Cuestionario sobre bienestar, contexto, salud, experiencia universitaria y aspectos personales.",
   "items": [
     {
+      "id": "intro_pausa",
+      "type": "info",
+      "prompt": "Proyecto PAUSA\n\nGracias por tomarte unos minutos para responder este cuestionario sobre bienestar y experiencia universitaria. Tus respuestas son anónimas y se utilizarán solo con fines de investigación.\n\nAntes de continuar, te invitamos a revisar el consentimiento informado en el siguiente enlace: <a href=\"#\" target=\"_blank\">Leer consentimiento informado</a>."
+    },
+    {
       "id": "info_s1",
       "type": "info",
       "prompt": "SECCIÓN 1 — ¿Cómo te sientes?\n\nEn esta sección encontrarás afirmaciones sobre cómo te has sentido y cómo evalúas tu vida en general. No hay respuestas correctas o incorrectas: responde según tu experiencia personal reciente."
