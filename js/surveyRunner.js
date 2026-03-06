@@ -42,6 +42,8 @@ export function createSurveyApp({ db, elements }) {
   let startTime = null;
   let itemStartTime = null;
   let itemTimes = {};
+  let responseTimestamps = {};
+  let presentationOrder = null;
 
   async function loadSurveyIndex() {
     const res = await fetch('surveys/index.json?_=' + Date.now());
@@ -94,17 +96,126 @@ export function createSurveyApp({ db, elements }) {
     startSurvey(prepared);
   }
 
-  // Hook para futuras transformaciones del cuestionario:
-  // - randomizar orden de ítems dentro de secciones
-  // - filtrar tipos no permitidos
-  // - inyectar metadatos, etc.
+  /** Fisher–Yates shuffle (no mutates; returns new array). */
+  function shuffle(arr) {
+    const out = arr.slice();
+    for (let i = out.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [out[i], out[j]] = [out[j], out[i]];
+    }
+    return out;
+  }
+
+  /** True si el ítem es cabecera de sección (info con "SECCIÓN"). */
+  function isSectionHeader(item) {
+    return item && item.type === 'info' && typeof item.prompt === 'string' && item.prompt.startsWith('SECCIÓN');
+  }
+
+  /**
+   * Reordena ítems según settings.randomizeItems.
+   * Valores: "within_scale" | "within_section" | "between_scales" | "between_dimensions" | false.
+   * Devuelve el survey con items reordenados y survey._presentationOrder = [ids en orden mostrado].
+   */
+  function applyRandomization(surveyCopy) {
+    const mode = surveyCopy.settings && surveyCopy.settings.randomizeItems;
+    if (!mode || mode === false) {
+      surveyCopy._presentationOrder = surveyCopy.items.map(it => it.id);
+      return surveyCopy;
+    }
+
+    const items = surveyCopy.items;
+
+    if (mode === 'within_scale') {
+      const result = [];
+      let i = 0;
+      while (i < items.length) {
+        const it = items[i];
+        if (!it.scale) {
+          result.push(it);
+          i++;
+          continue;
+        }
+        const scale = it.scale;
+        const block = [];
+        while (i < items.length && items[i].scale === scale) {
+          block.push(items[i]);
+          i++;
+        }
+        result.push(...shuffle(block));
+      }
+      surveyCopy.items = result;
+    } else if (mode === 'within_section') {
+      const sections = [];
+      let section = [];
+      for (let k = 0; k < items.length; k++) {
+        if (isSectionHeader(items[k]) && section.length > 0) {
+          sections.push(section);
+          section = [];
+        }
+        section.push(items[k]);
+      }
+      if (section.length) sections.push(section);
+      const result = [];
+      for (const sec of sections) {
+        const headers = [];
+        const rest = [];
+        for (const it of sec) {
+          if (it.type === 'info') headers.push(it);
+          else rest.push(it);
+        }
+        result.push(...headers, ...shuffle(rest));
+      }
+      surveyCopy.items = result;
+    } else if (mode === 'between_scales') {
+      const scaleBlocks = [];
+      const noScaleItems = [];
+      let i = 0;
+      while (i < items.length) {
+        const it = items[i];
+        if (!it.scale) {
+          noScaleItems.push(it);
+          i++;
+          continue;
+        }
+        const scale = it.scale;
+        const block = [];
+        while (i < items.length && items[i].scale === scale) {
+          block.push(items[i]);
+          i++;
+        }
+        scaleBlocks.push(block);
+      }
+      surveyCopy.items = noScaleItems.concat(...shuffle(scaleBlocks));
+    } else if (mode === 'between_dimensions') {
+      const dimBlocks = [];
+      const noDimItems = [];
+      let i = 0;
+      while (i < items.length) {
+        const it = items[i];
+        if (!it.dimension) {
+          noDimItems.push(it);
+          i++;
+          continue;
+        }
+        const dim = it.dimension;
+        const block = [];
+        while (i < items.length && items[i].dimension === dim) {
+          block.push(items[i]);
+          i++;
+        }
+        dimBlocks.push(block);
+      }
+      surveyCopy.items = noDimItems.concat(...shuffle(dimBlocks));
+    }
+
+    surveyCopy._presentationOrder = surveyCopy.items.map(it => it.id);
+    return surveyCopy;
+  }
+
+  // Hook para transformaciones del cuestionario: randomización, paradata de orden, etc.
   function prepareSurvey(rawSurvey) {
     const surveyCopy = structuredClone(rawSurvey);
-    // Ejemplo de sitio donde más adelante podríamos aplicar randomización:
-    // if (APP_CONFIG.randomization.enabled) {
-    //   surveyCopy.items = shuffleWithinBlocks(surveyCopy.items);
-    // }
-    return surveyCopy;
+    return applyRandomization(surveyCopy);
   }
 
   function startSurvey(data) {
@@ -113,6 +224,8 @@ export function createSurveyApp({ db, elements }) {
     answers = {};
     startTime = Date.now();
     itemTimes = {};
+    responseTimestamps = {};
+    presentationOrder = Array.isArray(survey._presentationOrder) ? survey._presentationOrder : survey.items.map(it => it.id);
     homeSection.style.display = 'none';
     runnerSection.style.display = 'block';
     header.style.display = 'none';
@@ -160,21 +273,24 @@ export function createSurveyApp({ db, elements }) {
         questionContainer.innerHTML = `<div class="info-text">${item.prompt}</div>`;
       }
     } else {
-      // Preguntas normales
-      questionContainer.innerHTML = `<div class="q">${item.prompt}</div>`;
+      // Preguntas normales: instruction opcional arriba, luego prompt
+      const instruction = item.instruction ? `<div class="item-instruction">${item.instruction}</div>` : '';
+      questionContainer.innerHTML = instruction + `<div class="q">${item.prompt}</div>`;
     }
 
     const goNext = () => {
-      if (APP_CONFIG.enableParadata && itemStartTime && item) {
-        itemTimes[item.id] = Date.now() - itemStartTime;
+      if (APP_CONFIG.enableParadata && item) {
+        if (itemStartTime) itemTimes[item.id] = Date.now() - itemStartTime;
+        responseTimestamps[item.id] = new Date().toISOString();
       }
       currentIndex += 1;
       renderStep();
     };
 
     const goPrev = () => {
-      if (APP_CONFIG.enableParadata && itemStartTime && item) {
-        itemTimes[item.id] = Date.now() - itemStartTime;
+      if (APP_CONFIG.enableParadata && item) {
+        if (itemStartTime) itemTimes[item.id] = Date.now() - itemStartTime;
+        responseTimestamps[item.id] = new Date().toISOString();
       }
       currentIndex = Math.max(0, currentIndex - 1);
       renderStep();
@@ -188,7 +304,7 @@ export function createSurveyApp({ db, elements }) {
   }
 
   function renderControlsForItem({ item, goNext, goPrev }) {
-    if (item.type === 'likert' || item.type === 'single_choice') {
+    if (isSingleChoiceItem(item)) {
       const options = normalizeOptions(item);
       const selectedCode = answers[item.id] ?? null;
       options.forEach(opt => {
@@ -474,14 +590,29 @@ export function createSurveyApp({ db, elements }) {
     return b;
   }
 
+  /** Opciones para un ítem: desde survey.optionSets[item.type] o item.options. */
+  function getItemOptions(item) {
+    const raw = (survey && survey.optionSets && survey.optionSets[item.type]) || item.options;
+    if (!Array.isArray(raw)) return [];
+    return raw;
+  }
+
   function normalizeOptions(item) {
-    if (!Array.isArray(item.options)) return [];
-    return item.options.map((opt, idx) => {
+    const raw = getItemOptions(item);
+    if (!raw.length) return [];
+    return raw.map((opt, idx) => {
       if (typeof opt === 'string') return { label: opt, code: idx + 1 };
       const label = opt.label ?? String(opt.code ?? opt.value ?? opt);
       const code = opt.code ?? opt.value ?? (idx + 1);
       return { label, code };
     });
+  }
+
+  /** True si el ítem se muestra como botones de opción única (likert, frequency, single_choice, multiple_choice con una sola selección, etc.). */
+  function isSingleChoiceItem(item) {
+    if (item.type === 'multi_choice') return false;
+    const opts = getItemOptions(item);
+    return opts.length > 0;
   }
 
   async function submitResponses() {
@@ -511,6 +642,8 @@ export function createSurveyApp({ db, elements }) {
       serverCode,
       totalTime,
       itemTimes,
+      ...(presentationOrder && { presentationOrder }),
+      ...(Object.keys(responseTimestamps).length > 0 && { responseTimestamps }),
       browserData,
       createdAt: serverTimestamp(),
       ua: navigator.userAgent,

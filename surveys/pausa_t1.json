@@ -2,11 +2,30 @@
   "id": "pausa_t1",
   "title": "Encuesta Pausa T1",
   "description": "Cuestionario sobre bienestar, contexto, salud, experiencia universitaria y aspectos personales.",
+  "settings": {
+    "randomizeItems": "within_scale"
+  },
+  "optionSets": {
+    "likert_agreement": [
+      "Totalmente en desacuerdo",
+      "En desacuerdo",
+      "Ni de acuerdo ni en desacuerdo",
+      "De acuerdo",
+      "Totalmente de acuerdo"
+    ],
+    "frequency": [
+      "Muy poco o nada",
+      "Un poco",
+      "Moderadamente",
+      "Bastante",
+      "Extremadamente"
+    ]
+  },
   "items": [
     {
       "id": "intro_pausa",
       "type": "info",
-      "prompt": "Proyecto PAUSA\n\nGracias por tomarte unos minutos para responder este cuestionario sobre bienestar y experiencia universitaria. Tus respuestas son anónimas y se utilizarán solo con fines de investigación.\n\nAntes de continuar, te invitamos a revisar el consentimiento informado en el siguiente enlace: <a href=\"#\" target=\"_blank\">Leer consentimiento informado</a>."
+      "prompt": "Proyecto PAUSA\n\nGracias por tomarte unos minutos para responder este cuestionario sobre bienestar y experiencia universitaria. Tus respuestas son anónimas y se utilizarán solo con fines de investigación.\n\nAntes de continuar, te recordamos que puedes revisar el consentimiento informado en este enlace: <a href=\"docs/consentimiento1.pdf\" target=\"_blank\" rel=\"noopener\">Leer consentimiento informado</a>.\n\nSi estás de acuerdo con participar, puedes presionar \"Siguiente\"."
     },
     {
       "id": "info_s1",
@@ -17,586 +36,342 @@
       "id": "BIENESTAR_PANAS_01",
       "dimension": "BIENESTAR",
       "scale": "PANAS",
-      "type": "likert",
+      "type": "frequency",
       "prompt": "Durante las últimas semanas, ¿en qué medida te has sentido: Interesado/a?",
-      "options": [
-        "Muy poco o nada",
-        "Un poco",
-        "Moderadamente",
-        "Bastante",
-        "Extremadamente"
-      ],
       "required": true
     },
     {
       "id": "BIENESTAR_PANAS_02",
       "dimension": "BIENESTAR",
       "scale": "PANAS",
-      "type": "likert",
+      "type": "frequency",
       "prompt": "Durante las últimas semanas, ¿en qué medida te has sentido: Entusiasmado/a?",
-      "options": [
-        "Muy poco o nada",
-        "Un poco",
-        "Moderadamente",
-        "Bastante",
-        "Extremadamente"
-      ],
       "required": true
     },
     {
       "id": "BIENESTAR_PANAS_03",
       "dimension": "BIENESTAR",
       "scale": "PANAS",
-      "type": "likert",
+      "type": "frequency",
       "prompt": "Durante las últimas semanas, ¿en qué medida te has sentido: Fuerte?",
-      "options": [
-        "Muy poco o nada",
-        "Un poco",
-        "Moderadamente",
-        "Bastante",
-        "Extremadamente"
-      ],
       "required": true
     },
     {
       "id": "BIENESTAR_PANAS_04",
       "dimension": "BIENESTAR",
       "scale": "PANAS",
-      "type": "likert",
+      "type": "frequency",
       "prompt": "Durante las últimas semanas, ¿en qué medida te has sentido: Inspirado/a?",
-      "options": [
-        "Muy poco o nada",
-        "Un poco",
-        "Moderadamente",
-        "Bastante",
-        "Extremadamente"
-      ],
       "required": true
     },
     {
       "id": "BIENESTAR_PANAS_05",
       "dimension": "BIENESTAR",
       "scale": "PANAS",
-      "type": "likert",
+      "type": "frequency",
       "prompt": "Durante las últimas semanas, ¿en qué medida te has sentido: Alerta?",
-      "options": [
-        "Muy poco o nada",
-        "Un poco",
-        "Moderadamente",
-        "Bastante",
-        "Extremadamente"
-      ],
       "required": true
     },
     {
       "id": "BIENESTAR_PANAS_06",
       "dimension": "BIENESTAR",
       "scale": "PANAS",
-      "type": "likert",
+      "type": "frequency",
       "prompt": "Durante las últimas semanas, ¿en qué medida te has sentido: Avergonzado/a?",
-      "options": [
-        "Muy poco o nada",
-        "Un poco",
-        "Moderadamente",
-        "Bastante",
-        "Extremadamente"
-      ],
       "required": true
     },
     {
       "id": "BIENESTAR_PANAS_07",
       "dimension": "BIENESTAR",
       "scale": "PANAS",
-      "type": "likert",
+      "type": "frequency",
       "prompt": "Durante las últimas semanas, ¿en qué medida te has sentido: Nervioso/a?",
-      "options": [
-        "Muy poco o nada",
-        "Un poco",
-        "Moderadamente",
-        "Bastante",
-        "Extremadamente"
-      ],
       "required": true
     },
     {
       "id": "BIENESTAR_PANAS_08",
       "dimension": "BIENESTAR",
       "scale": "PANAS",
-      "type": "likert",
+      "type": "frequency",
       "prompt": "Durante las últimas semanas, ¿en qué medida te has sentido: Irritable?",
-      "options": [
-        "Muy poco o nada",
-        "Un poco",
-        "Moderadamente",
-        "Bastante",
-        "Extremadamente"
-      ],
       "required": true
     },
     {
       "id": "BIENESTAR_PANAS_09",
       "dimension": "BIENESTAR",
       "scale": "PANAS",
-      "type": "likert",
+      "type": "frequency",
       "prompt": "Durante las últimas semanas, ¿en qué medida te has sentido: Asustado/a?",
-      "options": [
-        "Muy poco o nada",
-        "Un poco",
-        "Moderadamente",
-        "Bastante",
-        "Extremadamente"
-      ],
       "required": true
     },
     {
       "id": "BIENESTAR_PANAS_10",
       "dimension": "BIENESTAR",
       "scale": "PANAS",
-      "type": "likert",
+      "type": "frequency",
       "prompt": "Durante las últimas semanas, ¿en qué medida te has sentido: Culpable?",
-      "options": [
-        "Muy poco o nada",
-        "Un poco",
-        "Moderadamente",
-        "Bastante",
-        "Extremadamente"
-      ],
       "required": true
     },
     {
       "id": "BIENESTAR_FS_01",
       "dimension": "BIENESTAR",
       "scale": "FS",
-      "type": "likert",
+      "type": "likert_agreement",
       "prompt": "Llevo una vida con un propósito y significado.",
-      "options": [
-        "Totalmente en desacuerdo",
-        "En desacuerdo",
-        "Ni de acuerdo ni en desacuerdo",
-        "De acuerdo",
-        "Totalmente de acuerdo"
-      ],
-      "required": true
+      "required": true,
+      "instruction": "Indica tu grado de acuerdo con la siguiente afirmación."
     },
     {
       "id": "BIENESTAR_FS_02",
       "dimension": "BIENESTAR",
       "scale": "FS",
-      "type": "likert",
+      "type": "likert_agreement",
       "prompt": "Mis relaciones sociales son solidarias y gratificantes.",
-      "options": [
-        "Totalmente en desacuerdo",
-        "En desacuerdo",
-        "Ni de acuerdo ni en desacuerdo",
-        "De acuerdo",
-        "Totalmente de acuerdo"
-      ],
-      "required": true
+      "required": true,
+      "instruction": "Indica tu grado de acuerdo con la siguiente afirmación."
     },
     {
       "id": "BIENESTAR_FS_03",
       "dimension": "BIENESTAR",
       "scale": "FS",
-      "type": "likert",
+      "type": "likert_agreement",
       "prompt": "Soy una persona comprometida y con interés en lo que hago.",
-      "options": [
-        "Totalmente en desacuerdo",
-        "En desacuerdo",
-        "Ni de acuerdo ni en desacuerdo",
-        "De acuerdo",
-        "Totalmente de acuerdo"
-      ],
-      "required": true
+      "required": true,
+      "instruction": "Indica tu grado de acuerdo con la siguiente afirmación."
     },
     {
       "id": "BIENESTAR_FS_04",
       "dimension": "BIENESTAR",
       "scale": "FS",
-      "type": "likert",
+      "type": "likert_agreement",
       "prompt": "Contribuyo activamente al bienestar de los demás.",
-      "options": [
-        "Totalmente en desacuerdo",
-        "En desacuerdo",
-        "Ni de acuerdo ni en desacuerdo",
-        "De acuerdo",
-        "Totalmente de acuerdo"
-      ],
-      "required": true
+      "required": true,
+      "instruction": "Indica tu grado de acuerdo con la siguiente afirmación."
     },
     {
       "id": "BIENESTAR_FS_05",
       "dimension": "BIENESTAR",
       "scale": "FS",
-      "type": "likert",
+      "type": "likert_agreement",
       "prompt": "Soy competente y capaz en las actividades que son importantes para mí.",
-      "options": [
-        "Totalmente en desacuerdo",
-        "En desacuerdo",
-        "Ni de acuerdo ni en desacuerdo",
-        "De acuerdo",
-        "Totalmente de acuerdo"
-      ],
-      "required": true
+      "required": true,
+      "instruction": "Indica tu grado de acuerdo con la siguiente afirmación."
     },
     {
       "id": "BIENESTAR_FS_06",
       "dimension": "BIENESTAR",
       "scale": "FS",
-      "type": "likert",
+      "type": "likert_agreement",
       "prompt": "Soy una persona que se respeta a sí misma y se siente respetada.",
-      "options": [
-        "Totalmente en desacuerdo",
-        "En desacuerdo",
-        "Ni de acuerdo ni en desacuerdo",
-        "De acuerdo",
-        "Totalmente de acuerdo"
-      ],
-      "required": true
+      "required": true,
+      "instruction": "Indica tu grado de acuerdo con la siguiente afirmación."
     },
     {
       "id": "BIENESTAR_FS_07",
       "dimension": "BIENESTAR",
       "scale": "FS",
-      "type": "likert",
+      "type": "likert_agreement",
       "prompt": "Soy optimista sobre mi futuro.",
-      "options": [
-        "Totalmente en desacuerdo",
-        "En desacuerdo",
-        "Ni de acuerdo ni en desacuerdo",
-        "De acuerdo",
-        "Totalmente de acuerdo"
-      ],
-      "required": true
+      "required": true,
+      "instruction": "Indica tu grado de acuerdo con la siguiente afirmación."
     },
     {
       "id": "BIENESTAR_FS_08",
       "dimension": "BIENESTAR",
       "scale": "FS",
-      "type": "likert",
+      "type": "likert_agreement",
       "prompt": "La gente me respeta.",
-      "options": [
-        "Totalmente en desacuerdo",
-        "En desacuerdo",
-        "Ni de acuerdo ni en desacuerdo",
-        "De acuerdo",
-        "Totalmente de acuerdo"
-      ],
-      "required": true
+      "required": true,
+      "instruction": "Indica tu grado de acuerdo con la siguiente afirmación."
     },
     {
       "id": "BIENESTAR_SWLS_01",
       "dimension": "BIENESTAR",
       "scale": "SWLS",
-      "type": "likert",
+      "type": "likert_agreement",
       "prompt": "En la mayoría de los aspectos, mi vida es cercana a mi ideal.",
-      "options": [
-        "Totalmente en desacuerdo",
-        "En desacuerdo",
-        "Ni de acuerdo ni en desacuerdo",
-        "De acuerdo",
-        "Totalmente de acuerdo"
-      ],
-      "required": true
+      "required": true,
+      "instruction": "Indica tu grado de acuerdo con la siguiente afirmación."
     },
     {
       "id": "BIENESTAR_SWLS_02",
       "dimension": "BIENESTAR",
       "scale": "SWLS",
-      "type": "likert",
+      "type": "likert_agreement",
       "prompt": "Las condiciones de mi vida son excelentes.",
-      "options": [
-        "Totalmente en desacuerdo",
-        "En desacuerdo",
-        "Ni de acuerdo ni en desacuerdo",
-        "De acuerdo",
-        "Totalmente de acuerdo"
-      ],
-      "required": true
+      "required": true,
+      "instruction": "Indica tu grado de acuerdo con la siguiente afirmación."
     },
     {
       "id": "BIENESTAR_SWLS_03",
       "dimension": "BIENESTAR",
       "scale": "SWLS",
-      "type": "likert",
+      "type": "likert_agreement",
       "prompt": "Estoy satisfecho/a con mi vida.",
-      "options": [
-        "Totalmente en desacuerdo",
-        "En desacuerdo",
-        "Ni de acuerdo ni en desacuerdo",
-        "De acuerdo",
-        "Totalmente de acuerdo"
-      ],
-      "required": true
+      "required": true,
+      "instruction": "Indica tu grado de acuerdo con la siguiente afirmación."
     },
     {
       "id": "BIENESTAR_SWLS_04",
       "dimension": "BIENESTAR",
       "scale": "SWLS",
-      "type": "likert",
+      "type": "likert_agreement",
       "prompt": "Hasta ahora he conseguido las cosas importantes que quiero en la vida.",
-      "options": [
-        "Totalmente en desacuerdo",
-        "En desacuerdo",
-        "Ni de acuerdo ni en desacuerdo",
-        "De acuerdo",
-        "Totalmente de acuerdo"
-      ],
-      "required": true
+      "required": true,
+      "instruction": "Indica tu grado de acuerdo con la siguiente afirmación."
     },
     {
       "id": "BIENESTAR_SWLS_05",
       "dimension": "BIENESTAR",
       "scale": "SWLS",
-      "type": "likert",
+      "type": "likert_agreement",
       "prompt": "Si pudiera vivir mi vida de nuevo, casi no cambiaría nada.",
-      "options": [
-        "Totalmente en desacuerdo",
-        "En desacuerdo",
-        "Ni de acuerdo ni en desacuerdo",
-        "De acuerdo",
-        "Totalmente de acuerdo"
-      ],
-      "required": true
+      "required": true,
+      "instruction": "Indica tu grado de acuerdo con la siguiente afirmación."
     },
     {
       "id": "BIENESTAR_ELSS_01",
       "dimension": "BIENESTAR",
       "scale": "ELSS",
-      "type": "likert",
+      "type": "likert_agreement",
       "prompt": "Me esfuerzo por alcanzar mis metas incluso cuando enfrento dificultades.",
-      "options": [
-        "Totalmente en desacuerdo",
-        "En desacuerdo",
-        "Ni de acuerdo ni en desacuerdo",
-        "De acuerdo",
-        "Totalmente de acuerdo"
-      ],
-      "required": true
+      "required": true,
+      "instruction": "Indica tu grado de acuerdo con la siguiente afirmación."
     },
     {
       "id": "BIENESTAR_ELSS_02",
       "dimension": "BIENESTAR",
       "scale": "ELSS",
-      "type": "likert",
+      "type": "likert_agreement",
       "prompt": "Mantengo el entusiasmo por aprender cosas nuevas.",
-      "options": [
-        "Totalmente en desacuerdo",
-        "En desacuerdo",
-        "Ni de acuerdo ni en desacuerdo",
-        "De acuerdo",
-        "Totalmente de acuerdo"
-      ],
-      "required": true
+      "required": true,
+      "instruction": "Indica tu grado de acuerdo con la siguiente afirmación."
     },
     {
       "id": "BIENESTAR_ELSS_03",
       "dimension": "BIENESTAR",
       "scale": "ELSS",
-      "type": "likert",
+      "type": "likert_agreement",
       "prompt": "Encuentro razones para seguir adelante cuando me siento desanimado.",
-      "options": [
-        "Totalmente en desacuerdo",
-        "En desacuerdo",
-        "Ni de acuerdo ni en desacuerdo",
-        "De acuerdo",
-        "Totalmente de acuerdo"
-      ],
-      "required": true
+      "required": true,
+      "instruction": "Indica tu grado de acuerdo con la siguiente afirmación."
     },
     {
       "id": "BIENESTAR_ELSS_04",
       "dimension": "BIENESTAR",
       "scale": "ELSS",
-      "type": "likert",
+      "type": "likert_agreement",
       "prompt": "Me motivo a mí mismo para terminar las tareas que comienzo.",
-      "options": [
-        "Totalmente en desacuerdo",
-        "En desacuerdo",
-        "Ni de acuerdo ni en desacuerdo",
-        "De acuerdo",
-        "Totalmente de acuerdo"
-      ],
-      "required": true
+      "required": true,
+      "instruction": "Indica tu grado de acuerdo con la siguiente afirmación."
     },
     {
       "id": "BIENESTAR_ELSS_05",
       "dimension": "BIENESTAR",
       "scale": "ELSS",
-      "type": "likert",
+      "type": "likert_agreement",
       "prompt": "Trato de comprender cómo se sienten los demás en distintas situaciones.",
-      "options": [
-        "Totalmente en desacuerdo",
-        "En desacuerdo",
-        "Ni de acuerdo ni en desacuerdo",
-        "De acuerdo",
-        "Totalmente de acuerdo"
-      ],
-      "required": true
+      "required": true,
+      "instruction": "Indica tu grado de acuerdo con la siguiente afirmación."
     },
     {
       "id": "BIENESTAR_ELSS_06",
       "dimension": "BIENESTAR",
       "scale": "ELSS",
-      "type": "likert",
+      "type": "likert_agreement",
       "prompt": "Escucho con atención cuando alguien comparte sus emociones.",
-      "options": [
-        "Totalmente en desacuerdo",
-        "En desacuerdo",
-        "Ni de acuerdo ni en desacuerdo",
-        "De acuerdo",
-        "Totalmente de acuerdo"
-      ],
-      "required": true
+      "required": true,
+      "instruction": "Indica tu grado de acuerdo con la siguiente afirmación."
     },
     {
       "id": "BIENESTAR_ELSS_07",
       "dimension": "BIENESTAR",
       "scale": "ELSS",
-      "type": "likert",
+      "type": "likert_agreement",
       "prompt": "Me pongo en el lugar de otras personas para entender sus reacciones.",
-      "options": [
-        "Totalmente en desacuerdo",
-        "En desacuerdo",
-        "Ni de acuerdo ni en desacuerdo",
-        "De acuerdo",
-        "Totalmente de acuerdo"
-      ],
-      "required": true
+      "required": true,
+      "instruction": "Indica tu grado de acuerdo con la siguiente afirmación."
     },
     {
       "id": "BIENESTAR_ELSS_08",
       "dimension": "BIENESTAR",
       "scale": "ELSS",
-      "type": "likert",
+      "type": "likert_agreement",
       "prompt": "Reconozco fácilmente cuando alguien está triste o preocupado.",
-      "options": [
-        "Totalmente en desacuerdo",
-        "En desacuerdo",
-        "Ni de acuerdo ni en desacuerdo",
-        "De acuerdo",
-        "Totalmente de acuerdo"
-      ],
-      "required": true
+      "required": true,
+      "instruction": "Indica tu grado de acuerdo con la siguiente afirmación."
     },
     {
       "id": "BIENESTAR_ELSS_09",
       "dimension": "BIENESTAR",
       "scale": "ELSS",
-      "type": "likert",
+      "type": "likert_agreement",
       "prompt": "Puedo controlar mis emociones cuando me siento molesto.",
-      "options": [
-        "Totalmente en desacuerdo",
-        "En desacuerdo",
-        "Ni de acuerdo ni en desacuerdo",
-        "De acuerdo",
-        "Totalmente de acuerdo"
-      ],
-      "required": true
+      "required": true,
+      "instruction": "Indica tu grado de acuerdo con la siguiente afirmación."
     },
     {
       "id": "BIENESTAR_ELSS_10",
       "dimension": "BIENESTAR",
       "scale": "ELSS",
-      "type": "likert",
+      "type": "likert_agreement",
       "prompt": "Manejo bien el estrés en situaciones difíciles.",
-      "options": [
-        "Totalmente en desacuerdo",
-        "En desacuerdo",
-        "Ni de acuerdo ni en desacuerdo",
-        "De acuerdo",
-        "Totalmente de acuerdo"
-      ],
-      "required": true
+      "required": true,
+      "instruction": "Indica tu grado de acuerdo con la siguiente afirmación."
     },
     {
       "id": "BIENESTAR_ELSS_11",
       "dimension": "BIENESTAR",
       "scale": "ELSS",
-      "type": "likert",
+      "type": "likert_agreement",
       "prompt": "Evito reaccionar impulsivamente cuando estoy enojado.",
-      "options": [
-        "Totalmente en desacuerdo",
-        "En desacuerdo",
-        "Ni de acuerdo ni en desacuerdo",
-        "De acuerdo",
-        "Totalmente de acuerdo"
-      ],
-      "required": true
+      "required": true,
+      "instruction": "Indica tu grado de acuerdo con la siguiente afirmación."
     },
     {
       "id": "BIENESTAR_ELSS_12",
       "dimension": "BIENESTAR",
       "scale": "ELSS",
-      "type": "likert",
+      "type": "likert_agreement",
       "prompt": "Sé cómo calmarme cuando me siento ansioso.",
-      "options": [
-        "Totalmente en desacuerdo",
-        "En desacuerdo",
-        "Ni de acuerdo ni en desacuerdo",
-        "De acuerdo",
-        "Totalmente de acuerdo"
-      ],
-      "required": true
+      "required": true,
+      "instruction": "Indica tu grado de acuerdo con la siguiente afirmación."
     },
     {
       "id": "BIENESTAR_ELSS_13",
       "dimension": "BIENESTAR",
       "scale": "ELSS",
-      "type": "likert",
+      "type": "likert_agreement",
       "prompt": "Identifico con claridad mis propias emociones.",
-      "options": [
-        "Totalmente en desacuerdo",
-        "En desacuerdo",
-        "Ni de acuerdo ni en desacuerdo",
-        "De acuerdo",
-        "Totalmente de acuerdo"
-      ],
-      "required": true
+      "required": true,
+      "instruction": "Indica tu grado de acuerdo con la siguiente afirmación."
     },
     {
       "id": "BIENESTAR_ELSS_14",
       "dimension": "BIENESTAR",
       "scale": "ELSS",
-      "type": "likert",
+      "type": "likert_agreement",
       "prompt": "Reconozco cómo mis sentimientos afectan mis decisiones.",
-      "options": [
-        "Totalmente en desacuerdo",
-        "En desacuerdo",
-        "Ni de acuerdo ni en desacuerdo",
-        "De acuerdo",
-        "Totalmente de acuerdo"
-      ],
-      "required": true
+      "required": true,
+      "instruction": "Indica tu grado de acuerdo con la siguiente afirmación."
     },
     {
       "id": "BIENESTAR_ELSS_15",
       "dimension": "BIENESTAR",
       "scale": "ELSS",
-      "type": "likert",
+      "type": "likert_agreement",
       "prompt": "Soy consciente de los cambios en mi estado de ánimo.",
-      "options": [
-        "Totalmente en desacuerdo",
-        "En desacuerdo",
-        "Ni de acuerdo ni en desacuerdo",
-        "De acuerdo",
-        "Totalmente de acuerdo"
-      ],
-      "required": true
+      "required": true,
+      "instruction": "Indica tu grado de acuerdo con la siguiente afirmación."
     },
     {
       "id": "BIENESTAR_ELSS_16",
       "dimension": "BIENESTAR",
       "scale": "ELSS",
-      "type": "likert",
+      "type": "likert_agreement",
       "prompt": "Puedo nombrar con precisión lo que estoy sintiendo.",
-      "options": [
-        "Totalmente en desacuerdo",
-        "En desacuerdo",
-        "Ni de acuerdo ni en desacuerdo",
-        "De acuerdo",
-        "Totalmente de acuerdo"
-      ],
-      "required": true
+      "required": true,
+      "instruction": "Indica tu grado de acuerdo con la siguiente afirmación."
     },
     {
       "id": "info_s2",
@@ -607,181 +382,109 @@
       "id": "CONTEXTO_SOLSTICE_01",
       "dimension": "CONTEXTO",
       "scale": "SOLSTICE",
-      "type": "likert",
+      "type": "likert_agreement",
       "prompt": "En mi vida cotidiana, enfrento condiciones climáticas intensas que han influido en cómo organizo mis actividades.",
-      "options": [
-        "Totalmente en desacuerdo",
-        "En desacuerdo",
-        "Ni de acuerdo ni en desacuerdo",
-        "De acuerdo",
-        "Totalmente de acuerdo"
-      ],
-      "required": true
+      "required": true,
+      "instruction": "Indica tu grado de acuerdo con la siguiente afirmación."
     },
     {
       "id": "CONTEXTO_SOLSTICE_02",
       "dimension": "CONTEXTO",
       "scale": "SOLSTICE",
-      "type": "likert",
+      "type": "likert_agreement",
       "prompt": "Los cambios propios de las estaciones del año han tenido efectos en mis niveles de energía o en mi estado de ánimo.",
-      "options": [
-        "Totalmente en desacuerdo",
-        "En desacuerdo",
-        "Ni de acuerdo ni en desacuerdo",
-        "De acuerdo",
-        "Totalmente de acuerdo"
-      ],
-      "required": true
+      "required": true,
+      "instruction": "Indica tu grado de acuerdo con la siguiente afirmación."
     },
     {
       "id": "CONTEXTO_SOLSTICE_03",
       "dimension": "CONTEXTO",
       "scale": "SOLSTICE",
-      "type": "likert",
+      "type": "likert_agreement",
       "prompt": "Percibo que el lugar donde vivo presenta un grado de aislamiento geográfico que afecta mis actividades o posibilidades cotidianas.",
-      "options": [
-        "Totalmente en desacuerdo",
-        "En desacuerdo",
-        "Ni de acuerdo ni en desacuerdo",
-        "De acuerdo",
-        "Totalmente de acuerdo"
-      ],
-      "required": true
+      "required": true,
+      "instruction": "Indica tu grado de acuerdo con la siguiente afirmación."
     },
     {
       "id": "CONTEXTO_SOLSTICE_04",
       "dimension": "CONTEXTO",
       "scale": "SOLSTICE",
-      "type": "likert",
+      "type": "likert_agreement",
       "prompt": "Por las características del lugar donde habito, he tenido que enfrentar interrupciones o dificultades que impactan mi rutina.",
-      "options": [
-        "Totalmente en desacuerdo",
-        "En desacuerdo",
-        "Ni de acuerdo ni en desacuerdo",
-        "De acuerdo",
-        "Totalmente de acuerdo"
-      ],
-      "required": true
+      "required": true,
+      "instruction": "Indica tu grado de acuerdo con la siguiente afirmación."
     },
     {
       "id": "CONTEXTO_SOLSTICE_05",
       "dimension": "CONTEXTO",
       "scale": "SOLSTICE",
-      "type": "likert",
+      "type": "likert_agreement",
       "prompt": "Aun cuando las condiciones de mi entorno son desafiantes, logro mantener un nivel estable de bienestar.",
-      "options": [
-        "Totalmente en desacuerdo",
-        "En desacuerdo",
-        "Ni de acuerdo ni en desacuerdo",
-        "De acuerdo",
-        "Totalmente de acuerdo"
-      ],
-      "required": true
+      "required": true,
+      "instruction": "Indica tu grado de acuerdo con la siguiente afirmación."
     },
     {
       "id": "CONTEXTO_SOLSTICE_06",
       "dimension": "CONTEXTO",
       "scale": "SOLSTICE",
-      "type": "likert",
+      "type": "likert_agreement",
       "prompt": "Encuentro maneras de reorganizar mis rutinas para seguir funcionando bien cuando ocurren interrupciones o cambios externos.",
-      "options": [
-        "Totalmente en desacuerdo",
-        "En desacuerdo",
-        "Ni de acuerdo ni en desacuerdo",
-        "De acuerdo",
-        "Totalmente de acuerdo"
-      ],
-      "required": true
+      "required": true,
+      "instruction": "Indica tu grado de acuerdo con la siguiente afirmación."
     },
     {
       "id": "CONTEXTO_SOLSTICE_07",
       "dimension": "CONTEXTO",
       "scale": "SOLSTICE",
-      "type": "likert",
+      "type": "likert_agreement",
       "prompt": "Considero que el lugar donde vivo, con sus particularidades y desafíos, ha fortalecido mi capacidad de adaptación y crecimiento personal.",
-      "options": [
-        "Totalmente en desacuerdo",
-        "En desacuerdo",
-        "Ni de acuerdo ni en desacuerdo",
-        "De acuerdo",
-        "Totalmente de acuerdo"
-      ],
-      "required": true
+      "required": true,
+      "instruction": "Indica tu grado de acuerdo con la siguiente afirmación."
     },
     {
       "id": "CONTEXTO_SOLSTICE_08",
       "dimension": "CONTEXTO",
       "scale": "SOLSTICE",
-      "type": "likert",
+      "type": "likert_agreement",
       "prompt": "Siento que cuento con recursos personales o de mi entorno que me ayudan a enfrentar de buena manera los desafíos locales.",
-      "options": [
-        "Totalmente en desacuerdo",
-        "En desacuerdo",
-        "Ni de acuerdo ni en desacuerdo",
-        "De acuerdo",
-        "Totalmente de acuerdo"
-      ],
-      "required": true
+      "required": true,
+      "instruction": "Indica tu grado de acuerdo con la siguiente afirmación."
     },
     {
       "id": "CONTEXTO_EBCV_01",
       "dimension": "CONTEXTO",
       "scale": "EB-CV",
-      "type": "likert",
+      "type": "likert_agreement",
       "prompt": "Cuento con condiciones adecuadas de vivienda para estudiar y descansar.",
-      "options": [
-        "Totalmente en desacuerdo",
-        "En desacuerdo",
-        "Ni de acuerdo ni en desacuerdo",
-        "De acuerdo",
-        "Totalmente de acuerdo"
-      ],
-      "required": true
+      "required": true,
+      "instruction": "Indica tu grado de acuerdo con la siguiente afirmación."
     },
     {
       "id": "CONTEXTO_EBCV_02",
       "dimension": "CONTEXTO",
       "scale": "EB-CV",
-      "type": "likert",
+      "type": "likert_agreement",
       "prompt": "Tengo suficiente acceso a recursos tecnológicos necesarios para los estudios.",
-      "options": [
-        "Totalmente en desacuerdo",
-        "En desacuerdo",
-        "Ni de acuerdo ni en desacuerdo",
-        "De acuerdo",
-        "Totalmente de acuerdo"
-      ],
-      "required": true
+      "required": true,
+      "instruction": "Indica tu grado de acuerdo con la siguiente afirmación."
     },
     {
       "id": "CONTEXTO_EBCV_03",
       "dimension": "CONTEXTO",
       "scale": "EB-CV",
-      "type": "likert",
+      "type": "likert_agreement",
       "prompt": "El transporte que utilizo me permite habitualmente llegar a la universidad sin dificultades excesivas.",
-      "options": [
-        "Totalmente en desacuerdo",
-        "En desacuerdo",
-        "Ni de acuerdo ni en desacuerdo",
-        "De acuerdo",
-        "Totalmente de acuerdo"
-      ],
-      "required": true
+      "required": true,
+      "instruction": "Indica tu grado de acuerdo con la siguiente afirmación."
     },
     {
       "id": "CONTEXTO_EBCV_04",
       "dimension": "CONTEXTO",
       "scale": "EB-CV",
-      "type": "likert",
+      "type": "likert_agreement",
       "prompt": "La situación económica que vivo permite cubrir gastos básicos durante el semestre.",
-      "options": [
-        "Totalmente en desacuerdo",
-        "En desacuerdo",
-        "Ni de acuerdo ni en desacuerdo",
-        "De acuerdo",
-        "Totalmente de acuerdo"
-      ],
-      "required": true
+      "required": true,
+      "instruction": "Indica tu grado de acuerdo con la siguiente afirmación."
     },
     {
       "id": "info_s3",
@@ -958,136 +661,82 @@
       "id": "UNIVERSIDAD_EBCA_01",
       "dimension": "UNIVERSIDAD",
       "scale": "EB-CA",
-      "type": "likert",
+      "type": "likert_agreement",
       "prompt": "Participo activamente en las clases y actividades.",
-      "options": [
-        "Totalmente en desacuerdo",
-        "En desacuerdo",
-        "Ni de acuerdo ni en desacuerdo",
-        "De acuerdo",
-        "Totalmente de acuerdo"
-      ],
-      "required": true
+      "required": true,
+      "instruction": "Indica tu grado de acuerdo con la siguiente afirmación."
     },
     {
       "id": "UNIVERSIDAD_EBCA_02",
       "dimension": "UNIVERSIDAD",
       "scale": "EB-CA",
-      "type": "likert",
+      "type": "likert_agreement",
       "prompt": "Cumplo con mis trabajos y proyectos universitarios.",
-      "options": [
-        "Totalmente en desacuerdo",
-        "En desacuerdo",
-        "Ni de acuerdo ni en desacuerdo",
-        "De acuerdo",
-        "Totalmente de acuerdo"
-      ],
-      "required": true
+      "required": true,
+      "instruction": "Indica tu grado de acuerdo con la siguiente afirmación."
     },
     {
       "id": "UNIVERSIDAD_EBCA_03",
       "dimension": "UNIVERSIDAD",
       "scale": "EB-CA",
-      "type": "likert",
+      "type": "likert_agreement",
       "prompt": "Presto atención y respeto las normas en la universidad.",
-      "options": [
-        "Totalmente en desacuerdo",
-        "En desacuerdo",
-        "Ni de acuerdo ni en desacuerdo",
-        "De acuerdo",
-        "Totalmente de acuerdo"
-      ],
-      "required": true
+      "required": true,
+      "instruction": "Indica tu grado de acuerdo con la siguiente afirmación."
     },
     {
       "id": "UNIVERSIDAD_EBCA_04",
       "dimension": "UNIVERSIDAD",
       "scale": "EB-CA",
-      "type": "likert",
+      "type": "likert_agreement",
       "prompt": "Me gusta estar en la universidad.",
-      "options": [
-        "Totalmente en desacuerdo",
-        "En desacuerdo",
-        "Ni de acuerdo ni en desacuerdo",
-        "De acuerdo",
-        "Totalmente de acuerdo"
-      ],
-      "required": true
+      "required": true,
+      "instruction": "Indica tu grado de acuerdo con la siguiente afirmación."
     },
     {
       "id": "UNIVERSIDAD_EBCA_05",
       "dimension": "UNIVERSIDAD",
       "scale": "EB-CA",
-      "type": "likert",
+      "type": "likert_agreement",
       "prompt": "Me siento parte de la comunidad universitaria.",
-      "options": [
-        "Totalmente en desacuerdo",
-        "En desacuerdo",
-        "Ni de acuerdo ni en desacuerdo",
-        "De acuerdo",
-        "Totalmente de acuerdo"
-      ],
-      "required": true
+      "required": true,
+      "instruction": "Indica tu grado de acuerdo con la siguiente afirmación."
     },
     {
       "id": "UNIVERSIDAD_EBCA_06",
       "dimension": "UNIVERSIDAD",
       "scale": "EB-CA",
-      "type": "likert",
+      "type": "likert_agreement",
       "prompt": "Me siento orgulloso de pertenecer a mi institución de educación superior.",
-      "options": [
-        "Totalmente en desacuerdo",
-        "En desacuerdo",
-        "Ni de acuerdo ni en desacuerdo",
-        "De acuerdo",
-        "Totalmente de acuerdo"
-      ],
-      "required": true
+      "required": true,
+      "instruction": "Indica tu grado de acuerdo con la siguiente afirmación."
     },
     {
       "id": "UNIVERSIDAD_EBCA_07",
       "dimension": "UNIVERSIDAD",
       "scale": "EB-CA",
-      "type": "likert",
+      "type": "likert_agreement",
       "prompt": "Trato de ir más allá de lo que se pide en las asignaturas.",
-      "options": [
-        "Totalmente en desacuerdo",
-        "En desacuerdo",
-        "Ni de acuerdo ni en desacuerdo",
-        "De acuerdo",
-        "Totalmente de acuerdo"
-      ],
-      "required": true
+      "required": true,
+      "instruction": "Indica tu grado de acuerdo con la siguiente afirmación."
     },
     {
       "id": "UNIVERSIDAD_EBCA_08",
       "dimension": "UNIVERSIDAD",
       "scale": "EB-CA",
-      "type": "likert",
+      "type": "likert_agreement",
       "prompt": "Me esfuerzo por comprender temas complejos de mi carrera.",
-      "options": [
-        "Totalmente en desacuerdo",
-        "En desacuerdo",
-        "Ni de acuerdo ni en desacuerdo",
-        "De acuerdo",
-        "Totalmente de acuerdo"
-      ],
-      "required": true
+      "required": true,
+      "instruction": "Indica tu grado de acuerdo con la siguiente afirmación."
     },
     {
       "id": "UNIVERSIDAD_EBCA_09",
       "dimension": "UNIVERSIDAD",
       "scale": "EB-CA",
-      "type": "likert",
+      "type": "likert_agreement",
       "prompt": "Busco estrategias para aprender mejor en la universidad.",
-      "options": [
-        "Totalmente en desacuerdo",
-        "En desacuerdo",
-        "Ni de acuerdo ni en desacuerdo",
-        "De acuerdo",
-        "Totalmente de acuerdo"
-      ],
-      "required": true
+      "required": true,
+      "instruction": "Indica tu grado de acuerdo con la siguiente afirmación."
     },
     {
       "id": "info_s5",
@@ -1098,362 +747,217 @@
       "id": "PERSONA_MINIIPIP_01",
       "dimension": "PERSONA",
       "scale": "Mini-IPIP",
-      "type": "likert",
+      "type": "likert_agreement",
       "prompt": "Me siento cómodo iniciando conversaciones con personas nuevas.",
-      "options": [
-        "Totalmente en desacuerdo",
-        "En desacuerdo",
-        "Ni de acuerdo ni en desacuerdo",
-        "De acuerdo",
-        "Totalmente de acuerdo"
-      ],
-      "required": true
+      "required": true,
+      "instruction": "Indica tu grado de acuerdo con la siguiente afirmación."
     },
     {
       "id": "PERSONA_MINIIPIP_02",
       "dimension": "PERSONA",
       "scale": "Mini-IPIP",
-      "type": "likert",
+      "type": "likert_agreement",
       "prompt": "Disfruto estar rodeado de gente y participar en actividades sociales.",
-      "options": [
-        "Totalmente en desacuerdo",
-        "En desacuerdo",
-        "Ni de acuerdo ni en desacuerdo",
-        "De acuerdo",
-        "Totalmente de acuerdo"
-      ],
-      "required": true
+      "required": true,
+      "instruction": "Indica tu grado de acuerdo con la siguiente afirmación."
     },
     {
       "id": "PERSONA_MINIIPIP_03",
       "dimension": "PERSONA",
       "scale": "Mini-IPIP",
-      "type": "likert",
+      "type": "likert_agreement",
       "prompt": "Me considero una persona que disfruta al interactuar en grupos.",
-      "options": [
-        "Totalmente en desacuerdo",
-        "En desacuerdo",
-        "Ni de acuerdo ni en desacuerdo",
-        "De acuerdo",
-        "Totalmente de acuerdo"
-      ],
-      "required": true
+      "required": true,
+      "instruction": "Indica tu grado de acuerdo con la siguiente afirmación."
     },
     {
       "id": "PERSONA_MINIIPIP_04",
       "dimension": "PERSONA",
       "scale": "Mini-IPIP",
-      "type": "likert",
+      "type": "likert_agreement",
       "prompt": "Trato de ser considerado y amable con los demás.",
-      "options": [
-        "Totalmente en desacuerdo",
-        "En desacuerdo",
-        "Ni de acuerdo ni en desacuerdo",
-        "De acuerdo",
-        "Totalmente de acuerdo"
-      ],
-      "required": true
+      "required": true,
+      "instruction": "Indica tu grado de acuerdo con la siguiente afirmación."
     },
     {
       "id": "PERSONA_MINIIPIP_05",
       "dimension": "PERSONA",
       "scale": "Mini-IPIP",
-      "type": "likert",
+      "type": "likert_agreement",
       "prompt": "Me preocupo por las necesidades de las personas que me rodean.",
-      "options": [
-        "Totalmente en desacuerdo",
-        "En desacuerdo",
-        "Ni de acuerdo ni en desacuerdo",
-        "De acuerdo",
-        "Totalmente de acuerdo"
-      ],
-      "required": true
+      "required": true,
+      "instruction": "Indica tu grado de acuerdo con la siguiente afirmación."
     },
     {
       "id": "PERSONA_MINIIPIP_06",
       "dimension": "PERSONA",
       "scale": "Mini-IPIP",
-      "type": "likert",
+      "type": "likert_agreement",
       "prompt": "Busco cooperar más que competir en mis relaciones.",
-      "options": [
-        "Totalmente en desacuerdo",
-        "En desacuerdo",
-        "Ni de acuerdo ni en desacuerdo",
-        "De acuerdo",
-        "Totalmente de acuerdo"
-      ],
-      "required": true
+      "required": true,
+      "instruction": "Indica tu grado de acuerdo con la siguiente afirmación."
     },
     {
       "id": "PERSONA_MINIIPIP_07",
       "dimension": "PERSONA",
       "scale": "Mini-IPIP",
-      "type": "likert",
+      "type": "likert_agreement",
       "prompt": "Cumplo con mis compromisos incluso cuando requieren esfuerzo.",
-      "options": [
-        "Totalmente en desacuerdo",
-        "En desacuerdo",
-        "Ni de acuerdo ni en desacuerdo",
-        "De acuerdo",
-        "Totalmente de acuerdo"
-      ],
-      "required": true
+      "required": true,
+      "instruction": "Indica tu grado de acuerdo con la siguiente afirmación."
     },
     {
       "id": "PERSONA_MINIIPIP_08",
       "dimension": "PERSONA",
       "scale": "Mini-IPIP",
-      "type": "likert",
+      "type": "likert_agreement",
       "prompt": "Soy organizado en mis tareas y responsabilidades.",
-      "options": [
-        "Totalmente en desacuerdo",
-        "En desacuerdo",
-        "Ni de acuerdo ni en desacuerdo",
-        "De acuerdo",
-        "Totalmente de acuerdo"
-      ],
-      "required": true
+      "required": true,
+      "instruction": "Indica tu grado de acuerdo con la siguiente afirmación."
     },
     {
       "id": "PERSONA_MINIIPIP_09",
       "dimension": "PERSONA",
       "scale": "Mini-IPIP",
-      "type": "likert",
+      "type": "likert_agreement",
       "prompt": "Me esfuerzo por terminar lo que empiezo.",
-      "options": [
-        "Totalmente en desacuerdo",
-        "En desacuerdo",
-        "Ni de acuerdo ni en desacuerdo",
-        "De acuerdo",
-        "Totalmente de acuerdo"
-      ],
-      "required": true
+      "required": true,
+      "instruction": "Indica tu grado de acuerdo con la siguiente afirmación."
     },
     {
       "id": "PERSONA_MINIIPIP_10",
       "dimension": "PERSONA",
       "scale": "Mini-IPIP",
-      "type": "likert",
+      "type": "likert_agreement",
       "prompt": "Me preocupo con facilidad por cosas pequeñas.",
-      "options": [
-        "Totalmente en desacuerdo",
-        "En desacuerdo",
-        "Ni de acuerdo ni en desacuerdo",
-        "De acuerdo",
-        "Totalmente de acuerdo"
-      ],
-      "required": true
+      "required": true,
+      "instruction": "Indica tu grado de acuerdo con la siguiente afirmación."
     },
     {
       "id": "PERSONA_MINIIPIP_11",
       "dimension": "PERSONA",
       "scale": "Mini-IPIP",
-      "type": "likert",
+      "type": "likert_agreement",
       "prompt": "A menudo me siento ansioso o nervioso.",
-      "options": [
-        "Totalmente en desacuerdo",
-        "En desacuerdo",
-        "Ni de acuerdo ni en desacuerdo",
-        "De acuerdo",
-        "Totalmente de acuerdo"
-      ],
-      "required": true
+      "required": true,
+      "instruction": "Indica tu grado de acuerdo con la siguiente afirmación."
     },
     {
       "id": "PERSONA_MINIIPIP_12",
       "dimension": "PERSONA",
       "scale": "Mini-IPIP",
-      "type": "likert",
+      "type": "likert_agreement",
       "prompt": "Me afecta mucho cuando enfrento situaciones estresantes.",
-      "options": [
-        "Totalmente en desacuerdo",
-        "En desacuerdo",
-        "Ni de acuerdo ni en desacuerdo",
-        "De acuerdo",
-        "Totalmente de acuerdo"
-      ],
-      "required": true
+      "required": true,
+      "instruction": "Indica tu grado de acuerdo con la siguiente afirmación."
     },
     {
       "id": "PERSONA_MINIIPIP_13",
       "dimension": "PERSONA",
       "scale": "Mini-IPIP",
-      "type": "likert",
+      "type": "likert_agreement",
       "prompt": "Me interesa explorar ideas nuevas y diferentes.",
-      "options": [
-        "Totalmente en desacuerdo",
-        "En desacuerdo",
-        "Ni de acuerdo ni en desacuerdo",
-        "De acuerdo",
-        "Totalmente de acuerdo"
-      ],
-      "required": true
+      "required": true,
+      "instruction": "Indica tu grado de acuerdo con la siguiente afirmación."
     },
     {
       "id": "PERSONA_MINIIPIP_14",
       "dimension": "PERSONA",
       "scale": "Mini-IPIP",
-      "type": "likert",
+      "type": "likert_agreement",
       "prompt": "Disfruto actividades creativas como leer, escribir o arte.",
-      "options": [
-        "Totalmente en desacuerdo",
-        "En desacuerdo",
-        "Ni de acuerdo ni en desacuerdo",
-        "De acuerdo",
-        "Totalmente de acuerdo"
-      ],
-      "required": true
+      "required": true,
+      "instruction": "Indica tu grado de acuerdo con la siguiente afirmación."
     },
     {
       "id": "PERSONA_MINIIPIP_15",
       "dimension": "PERSONA",
       "scale": "Mini-IPIP",
-      "type": "likert",
+      "type": "likert_agreement",
       "prompt": "Estoy abierto a probar experiencias distintas y poco habituales.",
-      "options": [
-        "Totalmente en desacuerdo",
-        "En desacuerdo",
-        "Ni de acuerdo ni en desacuerdo",
-        "De acuerdo",
-        "Totalmente de acuerdo"
-      ],
-      "required": true
+      "required": true,
+      "instruction": "Indica tu grado de acuerdo con la siguiente afirmación."
     },
     {
       "id": "PERSONA_EBTO_01",
       "dimension": "PERSONA",
       "scale": "EB-TO",
-      "type": "likert",
+      "type": "likert_agreement",
       "prompt": "A veces oculto parte de la verdad para conseguir lo que quiero.",
-      "options": [
-        "Totalmente en desacuerdo",
-        "En desacuerdo",
-        "Ni de acuerdo ni en desacuerdo",
-        "De acuerdo",
-        "Totalmente de acuerdo"
-      ],
-      "required": true
+      "required": true,
+      "instruction": "Indica tu grado de acuerdo con la siguiente afirmación."
     },
     {
       "id": "PERSONA_EBTO_02",
       "dimension": "PERSONA",
       "scale": "EB-TO",
-      "type": "likert",
+      "type": "likert_agreement",
       "prompt": "Disfruto cuando reconocen mis logros.",
-      "options": [
-        "Totalmente en desacuerdo",
-        "En desacuerdo",
-        "Ni de acuerdo ni en desacuerdo",
-        "De acuerdo",
-        "Totalmente de acuerdo"
-      ],
-      "required": true
+      "required": true,
+      "instruction": "Indica tu grado de acuerdo con la siguiente afirmación."
     },
     {
       "id": "PERSONA_EBTO_03",
       "dimension": "PERSONA",
       "scale": "EB-TO",
-      "type": "likert",
+      "type": "likert_agreement",
       "prompt": "Actúo impulsivamente sin pensar en las consecuencias.",
-      "options": [
-        "Totalmente en desacuerdo",
-        "En desacuerdo",
-        "Ni de acuerdo ni en desacuerdo",
-        "De acuerdo",
-        "Totalmente de acuerdo"
-      ],
-      "required": true
+      "required": true,
+      "instruction": "Indica tu grado de acuerdo con la siguiente afirmación."
     },
     {
       "id": "PERSONA_EBTO_04",
       "dimension": "PERSONA",
       "scale": "EB-TO",
-      "type": "likert",
+      "type": "likert_agreement",
       "prompt": "Prefiero planear con cuidado para obtener ventaja.",
-      "options": [
-        "Totalmente en desacuerdo",
-        "En desacuerdo",
-        "Ni de acuerdo ni en desacuerdo",
-        "De acuerdo",
-        "Totalmente de acuerdo"
-      ],
-      "required": true
+      "required": true,
+      "instruction": "Indica tu grado de acuerdo con la siguiente afirmación."
     },
     {
       "id": "PERSONA_EBTO_05",
       "dimension": "PERSONA",
       "scale": "EB-TO",
-      "type": "likert",
+      "type": "likert_agreement",
       "prompt": "Creo que tengo cualidades que me hacen destacar.",
-      "options": [
-        "Totalmente en desacuerdo",
-        "En desacuerdo",
-        "Ni de acuerdo ni en desacuerdo",
-        "De acuerdo",
-        "Totalmente de acuerdo"
-      ],
-      "required": true
+      "required": true,
+      "instruction": "Indica tu grado de acuerdo con la siguiente afirmación."
     },
     {
       "id": "PERSONA_EBTO_06",
       "dimension": "PERSONA",
       "scale": "EB-TO",
-      "type": "likert",
+      "type": "likert_agreement",
       "prompt": "No me resulta difícil decidir aunque afecte negativamente a otros.",
-      "options": [
-        "Totalmente en desacuerdo",
-        "En desacuerdo",
-        "Ni de acuerdo ni en desacuerdo",
-        "De acuerdo",
-        "Totalmente de acuerdo"
-      ],
-      "required": true
+      "required": true,
+      "instruction": "Indica tu grado de acuerdo con la siguiente afirmación."
     },
     {
       "id": "PERSONA_EBTO_07",
       "dimension": "PERSONA",
       "scale": "EB-TO",
-      "type": "likert",
+      "type": "likert_agreement",
       "prompt": "Considero útil persuadir a otros para que hagan cosas que me beneficien.",
-      "options": [
-        "Totalmente en desacuerdo",
-        "En desacuerdo",
-        "Ni de acuerdo ni en desacuerdo",
-        "De acuerdo",
-        "Totalmente de acuerdo"
-      ],
-      "required": true
+      "required": true,
+      "instruction": "Indica tu grado de acuerdo con la siguiente afirmación."
     },
     {
       "id": "PERSONA_EBTO_08",
       "dimension": "PERSONA",
       "scale": "EB-TO",
-      "type": "likert",
+      "type": "likert_agreement",
       "prompt": "Me gusta estar en el centro de la atención social.",
-      "options": [
-        "Totalmente en desacuerdo",
-        "En desacuerdo",
-        "Ni de acuerdo ni en desacuerdo",
-        "De acuerdo",
-        "Totalmente de acuerdo"
-      ],
-      "required": true
+      "required": true,
+      "instruction": "Indica tu grado de acuerdo con la siguiente afirmación."
     },
     {
       "id": "PERSONA_EBTO_09",
       "dimension": "PERSONA",
       "scale": "EB-TO",
-      "type": "likert",
+      "type": "likert_agreement",
       "prompt": "No me preocupa romper reglas si me ayuda a alcanzar metas.",
-      "options": [
-        "Totalmente en desacuerdo",
-        "En desacuerdo",
-        "Ni de acuerdo ni en desacuerdo",
-        "De acuerdo",
-        "Totalmente de acuerdo"
-      ],
-      "required": true
+      "required": true,
+      "instruction": "Indica tu grado de acuerdo con la siguiente afirmación."
     }
   ]
 }
-
