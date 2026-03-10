@@ -34,7 +34,7 @@
     {
       "id": "correo_contacto",
       "type": "text",
-      "prompt": "Para poder identificar tus respuestas con tu persona, por favor ingresa el correo electrónico al que recibiste la invitación a este estudio.",
+      "prompt": "Para poder identificarte, por favor ingresa el correo electrónico al que recibiste la invitación a este estudio.",
       "placeholder": "Ejemplo: nombre@correo.cl",
       "maxLength": 30,
       "required": true
@@ -49,7 +49,7 @@
       "dimension": "BIENESTAR",
       "scale": "PANAS",
       "type": "frequency",
-      "prompt": "Durante las últimas semanas, ¿en qué medida te has sentido: Interesado/a?",
+      "prompt": "Durante las últimas semanas, ¿en qué medida te has sentido: Atento/a?",
       "required": true
     },
     {
@@ -65,7 +65,7 @@
       "dimension": "BIENESTAR",
       "scale": "PANAS",
       "type": "frequency",
-      "prompt": "Durante las últimas semanas, ¿en qué medida te has sentido: Fuerte?",
+      "prompt": "Durante las últimas semanas, ¿en qué medida te has sentido: Decidido/a?",
       "required": true
     },
     {
@@ -81,7 +81,7 @@
       "dimension": "BIENESTAR",
       "scale": "PANAS",
       "type": "frequency",
-      "prompt": "Durante las últimas semanas, ¿en qué medida te has sentido: Alerta?",
+      "prompt": "Durante las últimas semanas, ¿en qué medida te has sentido: Activo/a?",
       "required": true
     },
     {
@@ -105,7 +105,7 @@
       "dimension": "BIENESTAR",
       "scale": "PANAS",
       "type": "frequency",
-      "prompt": "Durante las últimas semanas, ¿en qué medida te has sentido: Irritable?",
+      "prompt": "Durante las últimas semanas, ¿en qué medida te has sentido: Agresivo/a?",
       "required": true
     },
     {
@@ -129,7 +129,7 @@
       "dimension": "BIENESTAR",
       "scale": "FS",
       "type": "likert_agreement",
-      "prompt": "Tengo una vida con propósito y significado.",
+      "prompt": "Llevo una vida con propósito y significado.",
       "required": true,
       "instruction": "Indica tu grado de acuerdo con la siguiente afirmación."
     },
@@ -395,7 +395,7 @@
       "dimension": "CONTEXTO",
       "scale": "SOLSTICE",
       "type": "likert_agreement",
-      "prompt": "En mi vida cotidiana, enfrento condiciones climáticas intensas que han influido en cómo organizo mis actividades.",
+      "prompt": "Percibo que las características del lugar o territorio donde vivo influyen de maneras particulares en cómo organizo mis actividades cotidianas.",
       "required": true,
       "instruction": "Indica tu grado de acuerdo con la siguiente afirmación."
     },
@@ -404,7 +404,7 @@
       "dimension": "CONTEXTO",
       "scale": "SOLSTICE",
       "type": "likert_agreement",
-      "prompt": "Los cambios propios de las estaciones del año han tenido efectos en mis niveles de energía o en mi estado de ánimo.",
+      "prompt": "A veces, las condiciones del lugar o territorio donde vivo dificultan más de lo habitual estudiar, trabajar o cumplir con mis responsabilidades.",
       "required": true,
       "instruction": "Indica tu grado de acuerdo con la siguiente afirmación."
     },
@@ -413,7 +413,7 @@
       "dimension": "CONTEXTO",
       "scale": "SOLSTICE",
       "type": "likert_agreement",
-      "prompt": "Percibo que el lugar donde vivo presenta un grado de aislamiento geográfico que afecta mis actividades o posibilidades cotidianas.",
+      "prompt": "Percibo que el entorno geográfico donde vivo afecta de algunas maneras mi nivel de energía o mi estado de ánimo.",
       "required": true,
       "instruction": "Indica tu grado de acuerdo con la siguiente afirmación."
     },
@@ -422,7 +422,7 @@
       "dimension": "CONTEXTO",
       "scale": "SOLSTICE",
       "type": "likert_agreement",
-      "prompt": "Por las características del lugar donde habito, he tenido que enfrentar interrupciones o dificultades que impactan mi rutina.",
+      "prompt": "En la ciudad o región donde vivo, las condiciones del entorno pueden alterar o interrumpir mis planes con cierta frecuencia.",
       "required": true,
       "instruction": "Indica tu grado de acuerdo con la siguiente afirmación."
     },
@@ -431,7 +431,7 @@
       "dimension": "CONTEXTO",
       "scale": "SOLSTICE",
       "type": "likert_agreement",
-      "prompt": "Aun cuando las condiciones de mi entorno son desafiantes, logro mantener un nivel estable de bienestar.",
+      "prompt": "Aun cuando el entorno donde vivo puede ser exigente, logro mantener un nivel relativamente estable de bienestar.",
       "required": true,
       "instruction": "Indica tu grado de acuerdo con la siguiente afirmación."
     },
@@ -440,7 +440,7 @@
       "dimension": "CONTEXTO",
       "scale": "SOLSTICE",
       "type": "likert_agreement",
-      "prompt": "Encuentro maneras de reorganizar mis rutinas para seguir funcionando bien cuando ocurren interrupciones o cambios externos.",
+      "prompt": "Cuando las condiciones del entorno donde vivo se vuelven difíciles, suelo encontrar maneras de adaptarme y seguir funcionando bien.",
       "required": true,
       "instruction": "Indica tu grado de acuerdo con la siguiente afirmación."
     },
@@ -449,7 +449,7 @@
       "dimension": "CONTEXTO",
       "scale": "SOLSTICE",
       "type": "likert_agreement",
-      "prompt": "Considero que el lugar donde vivo, con sus particularidades y desafíos, ha fortalecido mi capacidad de adaptación y crecimiento personal.",
+      "prompt": "Siento que vivir en este entorno ha fortalecido mi capacidad para enfrentar dificultades.",
       "required": true,
       "instruction": "Indica tu grado de acuerdo con la siguiente afirmación."
     },
@@ -458,7 +458,7 @@
       "dimension": "CONTEXTO",
       "scale": "SOLSTICE",
       "type": "likert_agreement",
-      "prompt": "Siento que cuento con recursos personales o de mi entorno que me ayudan a enfrentar de buena manera los desafíos locales.",
+      "prompt": "Cuento con recursos personales o del entorno que me ayudan a desenvolverme bien en las condiciones del lugar donde vivo.",
       "required": true,
       "instruction": "Indica tu grado de acuerdo con la siguiente afirmación."
     },
