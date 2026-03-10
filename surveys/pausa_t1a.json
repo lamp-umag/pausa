@@ -3,7 +3,11 @@
   "title": "Encuesta Pausa T1A",
   "description": "Cuestionario sobre bienestar, contexto, salud, experiencia universitaria y aspectos personales.",
   "settings": {
-    "randomizeItems": "within_scale"
+    "randomizeItems": "within_scale",
+    "splash": {
+      "enabled": true,
+      "durationMs": 1500
+    }
   },
   "optionSets": {
     "likert_agreement": [
@@ -25,7 +29,7 @@
     {
       "id": "intro_pausa",
       "type": "info",
-      "prompt": "Proyecto PAUSA\n\nGracias por tomarte unos minutos para responder este cuestionario sobre bienestar y experiencia universitaria. Tus respuestas son anónimas y se utilizarán solo con fines de investigación.\n\nAntes de continuar, te recordamos que puedes revisar el consentimiento informado en este enlace: <a href=\"docs/consentimiento1.pdf\" target=\"_blank\" rel=\"noopener\">Leer consentimiento informado</a>.\n\nSi estás de acuerdo con participar, puedes presionar \"Siguiente\"."
+      "prompt": "Proyecto PAUSA\n\nGracias por tomarte unos minutos para responder este cuestionario sobre bienestar y experiencia universitaria. Tus respuestas son confidenciales y se utilizarán solo con fines de investigación.\n\nAntes de continuar, te recordamos que puedes revisar el consentimiento informado en este enlace: <a href=\"docs/consentimientoa.pdf\" target=\"_blank\" rel=\"noopener\">Leer consentimiento informado</a>.\n\nSi estás de acuerdo con participar, puedes presionar \"Siguiente\"."
     },
     {
       "id": "rut_identificacion",
@@ -968,6 +972,16 @@
       "prompt": "No me preocupa romper reglas si me ayuda a alcanzar metas.",
       "required": true,
       "instruction": "Indica tu grado de acuerdo con la siguiente afirmación."
+    },
+    {
+      "id": "contacto_telefono",
+      "type": "text",
+      "prompt": "Si estás de acuerdo, ¿cuál es el número de teléfono al que prefieres ser contactado/a por mensajería (por ejemplo, WhatsApp)?",
+      "placeholder": "Ejemplo: +56912345678",
+      "maxLength": 20,
+      "required": false,
+      "allowedChars": "+0123456789",
+      "help": "Solo se permiten números y el signo +."
     },
     {
       "id": "comentario_final",

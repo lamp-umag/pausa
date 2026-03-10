@@ -15,7 +15,7 @@ export const APP_CONFIG = {
     enabled: false
   },
   messages: {
-  thankYou: '<div class="q center">¡Muchas gracias por tu participación!</div><div class="info-text center">Tus respuestas contribuirán a este proyecto en Pausa.\n\nAnte cualquier duda o consulta, puedes contactarte con pausa@umag.cl.</div>'
+    thankYou: '<div class="q center">¡Muchas gracias por tu participación!</div><div class="info-text center">Tus respuestas son muy valiosas.\n\nAnte cualquier duda o consulta, puedes contactarte con pausa@umag.cl.</div>'
   }
 };
 
@@ -33,7 +33,8 @@ export function createSurveyApp({ db, elements }) {
     questionContainer,
     optionsContainer,
     controlsContainer,
-    footnoteContainer
+    footnoteContainer,
+    splashOverlay
   } = elements;
 
   let survey = null;
@@ -218,6 +219,16 @@ export function createSurveyApp({ db, elements }) {
     return applyRandomization(surveyCopy);
   }
 
+  function showSplashOverlay() {
+    if (!splashOverlay) return;
+    splashOverlay.classList.add('visible');
+  }
+
+  function hideSplashOverlay() {
+    if (!splashOverlay) return;
+    splashOverlay.classList.remove('visible');
+  }
+
   function startSurvey(data) {
     survey = data;
     currentIndex = 0;
@@ -229,7 +240,24 @@ export function createSurveyApp({ db, elements }) {
     homeSection.style.display = 'none';
     runnerSection.style.display = 'block';
     header.style.display = 'none';
-    renderStep();
+
+    const splashCfg = survey.settings && survey.settings.splash;
+    const shouldShowSplash = splashCfg && splashCfg.enabled;
+    const progressEl = bar && bar.parentElement;
+
+    if (shouldShowSplash) {
+      const duration = typeof splashCfg.durationMs === 'number' ? splashCfg.durationMs : 1000;
+      if (progressEl) progressEl.style.opacity = '0';
+      showSplashOverlay();
+      setTimeout(() => {
+        hideSplashOverlay();
+        if (progressEl) progressEl.style.opacity = '';
+        renderStep();
+      }, duration);
+    } else {
+      if (progressEl) progressEl.style.opacity = '';
+      renderStep();
+    }
   }
 
   function renderStep() {

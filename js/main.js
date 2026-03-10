@@ -19,7 +19,8 @@ document.addEventListener('DOMContentLoaded', () => {
       questionContainer: document.getElementById('question'),
       optionsContainer: document.getElementById('options'),
       controlsContainer: document.getElementById('controls'),
-      footnoteContainer: document.getElementById('footnote')
+      footnoteContainer: document.getElementById('footnote'),
+      splashOverlay: document.getElementById('splashOverlay')
     }
   });
 

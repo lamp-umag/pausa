@@ -344,6 +344,27 @@
         background: transparent;
         padding: 0;
       }
+      .splash-overlay {
+        position: fixed;
+        inset: 0;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: radial-gradient(circle at center, color-mix(in srgb, var(--primary) 7%, transparent) 0%, transparent 55%);
+        opacity: 0;
+        pointer-events: none;
+        transition: opacity 0.6s ease-out;
+        z-index: 20;
+      }
+      .splash-overlay.visible {
+        opacity: 1;
+        pointer-events: auto;
+      }
+      .splash-overlay img {
+        max-width: min(180px, 36vw);
+        height: auto;
+        filter: drop-shadow(0 30px 50px rgba(15,23,42,0.45));
+      }
     </style>
   </head>
   <body>
@@ -352,6 +373,9 @@
       <!-- En el futuro aquí podemos poner un enlace de admin o información -->
     </header>
     <main>
+      <div id="splashOverlay" class="splash-overlay">
+        <img src="imgs/pautr.png" alt="Proyecto PAUSA" />
+      </div>
       <section id="home" class="card">
         <h2 style="margin:0 0 12px 0; font-size:22px;">Espacio de encuestas — Proyecto PAUSA</h2>
         <p class="info-text" style="margin-top:8px;">
