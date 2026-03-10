@@ -299,7 +299,7 @@ export function createSurveyApp({ db, elements }) {
 
     renderControlsForItem({ item, goNext, goPrev, isLastItem });
 
-    if (item.help) {
+    if (item.help && item.type !== 'text') {
       footnoteContainer.innerText = item.help;
     }
   }
@@ -404,15 +404,24 @@ export function createSurveyApp({ db, elements }) {
       input.maxLength = item.maxLength || 500;
       if (answers[item.id] != null) input.value = answers[item.id];
       input.addEventListener('input', () => {
-        let v = input.value;
-        if (item.allowedChars) {
-          const filtered = filterByAllowedChars(v, item.allowedChars);
-          if (filtered !== v) {
-            v = filtered;
-            input.value = v;
-          }
+      const original = input.value;
+      let v = original;
+      let hadInvalid = false;
+      if (item.allowedChars) {
+        const filtered = filterByAllowedChars(original, item.allowedChars);
+        if (filtered !== original) {
+          hadInvalid = true;
+          v = filtered;
+          input.value = v;
         }
-        answers[item.id] = v;
+      }
+      answers[item.id] = v;
+
+      if (hadInvalid) {
+        footnoteContainer.innerText = item.help || '';
+      } else if (footnoteContainer.innerText === (item.help || '')) {
+        footnoteContainer.innerText = '';
+      }
       });
       optionsContainer.appendChild(input);
       const back = button('← Atrás', 'secondary');

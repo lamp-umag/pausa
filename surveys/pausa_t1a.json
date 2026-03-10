@@ -14,11 +14,11 @@
       "Totalmente de acuerdo"
     ],
     "frequency": [
-      "Muy poco o nada",
+      "Nada",
       "Un poco",
       "Moderadamente",
       "Bastante",
-      "Extremadamente"
+      "Mucho"
     ]
   },
   "items": [
@@ -127,7 +127,7 @@
       "dimension": "BIENESTAR",
       "scale": "FS",
       "type": "likert_agreement",
-      "prompt": "Llevo una vida con un propósito y significado.",
+      "prompt": "Tengo una vida con propósito y significado.",
       "required": true,
       "instruction": "Indica tu grado de acuerdo con la siguiente afirmación."
     },
@@ -492,7 +492,7 @@
       "dimension": "CONTEXTO",
       "scale": "EB-CV",
       "type": "likert_agreement",
-      "prompt": "La situación económica que vivo permite cubrir gastos básicos durante el semestre.",
+      "prompt": "La situación económica de mi hogar permite cubrir gastos básicos durante el semestre.",
       "required": true,
       "instruction": "Indica tu grado de acuerdo con la siguiente afirmación."
     },
