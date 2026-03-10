@@ -15,7 +15,7 @@ export const APP_CONFIG = {
     enabled: false
   },
   messages: {
-    thankYou: '<div class="q center">¡Muchas gracias por tu participación!</div><div class="info-text center">Tus respuestas contribuirán a este proyecto en Pausa.\n\nAnte cualquier duda o consulta, puedes contactarte con el responsable.</div>'
+  thankYou: '<div class="q center">¡Muchas gracias por tu participación!</div><div class="info-text center">Tus respuestas contribuirán a este proyecto en Pausa.\n\nAnte cualquier duda o consulta, puedes contactarte con pausa@umag.cl.</div>'
   }
 };
 
@@ -253,6 +253,7 @@ export function createSurveyApp({ db, elements }) {
     }
 
     const item = survey.items[currentIndex];
+    const isLastItem = currentIndex === survey.items.length - 1;
     itemStartTime = Date.now();
 
     // Tipo 'info': solo muestra texto informativo (sin input)
@@ -296,14 +297,24 @@ export function createSurveyApp({ db, elements }) {
       renderStep();
     };
 
-    renderControlsForItem({ item, goNext, goPrev });
+    renderControlsForItem({ item, goNext, goPrev, isLastItem });
 
     if (item.help) {
       footnoteContainer.innerText = item.help;
     }
   }
 
-  function renderControlsForItem({ item, goNext, goPrev }) {
+  function filterByAllowedChars(value, allowedChars) {
+    if (!allowedChars || typeof allowedChars !== 'string') return value;
+    const set = new Set(allowedChars.split(''));
+    let out = '';
+    for (const ch of value) {
+      if (set.has(ch)) out += ch;
+    }
+    return out;
+  }
+
+  function renderControlsForItem({ item, goNext, goPrev, isLastItem }) {
     if (isSingleChoiceItem(item)) {
       const options = normalizeOptions(item);
       const selectedCode = answers[item.id] ?? null;
@@ -392,14 +403,29 @@ export function createSurveyApp({ db, elements }) {
       input.placeholder = item.placeholder || '';
       input.maxLength = item.maxLength || 500;
       if (answers[item.id] != null) input.value = answers[item.id];
-      input.addEventListener('input', () => { answers[item.id] = input.value; });
+      input.addEventListener('input', () => {
+        let v = input.value;
+        if (item.allowedChars) {
+          const filtered = filterByAllowedChars(v, item.allowedChars);
+          if (filtered !== v) {
+            v = filtered;
+            input.value = v;
+          }
+        }
+        answers[item.id] = v;
+      });
       optionsContainer.appendChild(input);
       const back = button('← Atrás', 'secondary');
       back.onclick = goPrev;
-      const next = button('Siguiente →', 'primary');
+      const primaryLabel = isLastItem && item.id === 'comentario_final' ? 'Enviar' : 'Siguiente →';
+      const next = button(primaryLabel, 'primary');
       next.onclick = () => {
         if (item.required && (!answers[item.id] || String(answers[item.id]).trim() === '')) return;
-        goNext();
+        if (isLastItem && item.id === 'comentario_final') {
+          submitResponses();
+        } else {
+          goNext();
+        }
       };
       controlsContainer.append(back, next);
       return;
@@ -666,12 +692,10 @@ export function createSurveyApp({ db, elements }) {
   // Init público: devuelve helpers por si más adelante quieres usarlos
   // desde la consola del navegador.
   async function init() {
-    const items = await loadSurveyIndex();
     const selected = qsParam('survey');
     if (selected) {
+      const items = await loadSurveyIndex();
       await startSurveyById(selected, items);
-    } else {
-      showHome(items);
     }
     document.body.style.paddingBottom = '24px';
   }

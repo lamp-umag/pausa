@@ -1,0 +1,354 @@
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" />
+    <title>Pausa — admin encuestas</title>
+    <meta name="description" content="Panel de administración de encuestas Pausa" />
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+      :root {
+        --bg: #020617;
+        --foreground: #e5e7eb;
+        --muted: #9ca3af;
+        --primary: #22d3ee;
+        --primary-soft: rgba(34, 211, 238, 0.2);
+        --primary-foreground: #020617;
+        --surface: rgba(15, 23, 42, 0.96);
+        --surface-soft: rgba(15, 23, 42, 0.85);
+        --border: rgba(148, 163, 184, 0.4);
+        --danger: #f97373;
+      }
+      * { box-sizing: border-box; }
+      html, body {
+        height: 100%;
+        margin: 0;
+        padding: 0;
+      }
+      body {
+        font-family: 'Inter', system-ui, -apple-system, sans-serif;
+        background: radial-gradient(circle at top, #022c22 0, #020617 40%, #020617 100%);
+        color: var(--foreground);
+        -webkit-font-smoothing: antialiased;
+        -moz-osx-font-smoothing: grayscale;
+      }
+      body::before {
+        content: '';
+        position: fixed;
+        inset: 0;
+        pointer-events: none;
+        background:
+          radial-gradient(circle at 0% 0%, rgba(56, 189, 248, 0.22) 0, transparent 45%),
+          radial-gradient(circle at 100% 100%, rgba(16, 185, 129, 0.18) 0, transparent 45%);
+        filter: blur(80px);
+        opacity: 0.9;
+        z-index: -1;
+      }
+      header {
+        padding: 16px 20px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        position: sticky;
+        top: 0;
+        z-index: 10;
+        background: linear-gradient(to bottom, rgba(15, 23, 42, 0.95), rgba(15, 23, 42, 0.85));
+        backdrop-filter: blur(12px);
+        border-bottom: 1px solid rgba(148, 163, 184, 0.35);
+      }
+      .brand {
+        font-weight: 800;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+        font-size: 18px;
+      }
+      .tagline {
+        font-size: 13px;
+        color: var(--muted);
+      }
+      main {
+        max-width: 960px;
+        margin: 0 auto;
+        padding: 24px 16px 32px;
+      }
+      .card {
+        background: var(--surface-soft);
+        border-radius: 16px;
+        padding: 20px;
+        border: 1px solid var(--border);
+        box-shadow:
+          0 18px 45px rgba(15, 23, 42, 0.65),
+          0 0 0 1px rgba(15, 23, 42, 0.8);
+      }
+      .card + .card { margin-top: 16px; }
+      .card-header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 8px;
+        margin-bottom: 14px;
+      }
+      h1 {
+        font-size: 22px;
+        margin: 0;
+      }
+      h2 {
+        font-size: 18px;
+        margin: 0;
+      }
+      .pill {
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        padding: 4px 10px;
+        font-size: 11px;
+        border-radius: 999px;
+        border: 1px solid rgba(148, 163, 184, 0.6);
+        color: var(--muted);
+      }
+      .pill-dot {
+        width: 7px;
+        height: 7px;
+        border-radius: 999px;
+        background: #22c55e;
+        box-shadow: 0 0 12px rgba(34, 197, 94, 0.85);
+      }
+      .muted {
+        color: var(--muted);
+        font-size: 14px;
+      }
+      .small {
+        color: var(--muted);
+        font-size: 12px;
+      }
+      .danger {
+        color: var(--danger);
+      }
+      .row {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 12px;
+        flex-wrap: wrap;
+      }
+      .btn {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 6px;
+        padding: 8px 14px;
+        border-radius: 999px;
+        font-size: 13px;
+        font-weight: 500;
+        border: 1px solid transparent;
+        cursor: pointer;
+        background: transparent;
+        color: inherit;
+        transition: all 0.18s ease-out;
+      }
+      .btn-primary {
+        background: linear-gradient(to right, #22d3ee, #2dd4bf);
+        color: #020617;
+        box-shadow: 0 12px 30px rgba(34, 211, 238, 0.35);
+      }
+      .btn-primary:hover {
+        transform: translateY(-1px) scale(1.01);
+        box-shadow: 0 18px 45px rgba(34, 211, 238, 0.50);
+      }
+      .btn-outline {
+        border-color: rgba(148, 163, 184, 0.6);
+        color: var(--muted);
+        background: rgba(15, 23, 42, 0.8);
+      }
+      .btn-outline:hover {
+        border-color: var(--primary);
+        color: var(--foreground);
+        background: radial-gradient(circle at top left, var(--primary-soft), rgba(15, 23, 42, 0.96));
+      }
+      .btn-sm {
+        padding: 6px 10px;
+        font-size: 12px;
+      }
+      .chip {
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        padding: 4px 8px;
+        border-radius: 999px;
+        font-size: 11px;
+        background: rgba(15, 23, 42, 0.9);
+        border: 1px solid rgba(148, 163, 184, 0.6);
+      }
+      .status-dot {
+        width: 8px;
+        height: 8px;
+        border-radius: 999px;
+        background: #22c55e;
+      }
+      .status-dot.warn {
+        background: #fbbf24;
+      }
+      table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-top: 10px;
+        font-size: 13px;
+      }
+      th, td {
+        padding: 8px 10px;
+        text-align: left;
+        border-bottom: 1px solid rgba(31, 41, 55, 0.9);
+      }
+      th {
+        font-size: 11px;
+        text-transform: uppercase;
+        letter-spacing: 0.08em;
+        color: var(--muted);
+      }
+      tbody tr:hover {
+        background: radial-gradient(circle at left, rgba(34, 211, 238, 0.07), transparent 60%);
+      }
+      code {
+        font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+        font-size: 12px;
+        padding: 2px 6px;
+        border-radius: 5px;
+        background: rgba(15, 23, 42, 0.9);
+        border: 1px solid rgba(31, 41, 55, 0.9);
+        color: rgba(248, 250, 252, 0.9);
+      }
+      .text-right { text-align: right; }
+      .badge {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        min-width: 32px;
+        padding: 4px 8px;
+        border-radius: 999px;
+        font-size: 12px;
+        background: rgba(15, 23, 42, 0.9);
+        border: 1px solid rgba(148, 163, 184, 0.7);
+      }
+      .spinner {
+        width: 16px;
+        height: 16px;
+        border-radius: 999px;
+        border: 2px solid rgba(148, 163, 184, 0.4);
+        border-top-color: var(--primary);
+        animation: spin 0.7s linear infinite;
+      }
+      @keyframes spin {
+        to { transform: rotate(360deg); }
+      }
+      .mt-8 { margin-top: 8px; }
+      .mt-16 { margin-top: 16px; }
+      .hidden { display: none; }
+      a {
+        color: var(--primary);
+        text-decoration: none;
+      }
+      a:hover {
+        text-decoration: underline;
+      }
+    </style>
+  </head>
+  <body>
+    <header>
+      <div>
+        <div class="brand">pausa</div>
+        <div class="tagline">Panel de datos — Proyecto PAUSA</div>
+      </div>
+      <div id="userChip" class="chip hidden">
+        <span class="status-dot" id="userStatusDot"></span>
+        <span id="userEmail"></span>
+      </div>
+    </header>
+
+    <main>
+      <section class="card" id="authCard">
+        <div class="card-header">
+          <h1>Acceso restringido</h1>
+          <span class="pill">
+            <span class="pill-dot"></span>
+            Solo administradores del proyecto
+          </span>
+        </div>
+        <p class="muted">
+          Este panel permite revisar el estado de las encuestas de <strong>Proyecto PAUSA</strong> y descargar
+          las respuestas en formatos listos para análisis estadístico.
+        </p>
+        <div class="mt-16 row">
+          <div>
+            <p class="small">
+              Acceso permitido únicamente para cuentas administradoras de Proyecto PAUSA autenticadas con Google.
+            </p>
+            <p class="small muted">
+              Cualquier otra cuenta de Google será bloqueada para la lectura de datos.
+            </p>
+          </div>
+          <div>
+            <button id="loginBtn" class="btn btn-primary">
+              <span>Entrar con Google</span>
+            </button>
+          </div>
+        </div>
+        <p id="authError" class="small danger mt-8 hidden"></p>
+      </section>
+
+      <section class="card hidden" id="contentCard">
+        <div class="card-header">
+          <h2>Encuestas en Firebase</h2>
+          <div class="row" style="gap:8px;">
+            <span id="surveyCountChip" class="chip hidden">
+              <span class="status-dot"></span>
+              <span id="surveyCountLabel"></span>
+            </span>
+            <button id="refreshBtn" class="btn btn-outline btn-sm">
+              <span class="spinner hidden" id="refreshSpinner"></span>
+              <span>Actualizar conteos</span>
+            </button>
+          </div>
+        </div>
+        <p class="muted">
+          Para cada encuesta se muestran el número de respuestas guardadas en <code>Firestore</code> y accesos directos
+          para descargar:
+        </p>
+        <ul class="small">
+          <li><strong>CSV datos</strong>: solo variables de respuesta, listo para importar a R / Python / SPSS.</li>
+          <li><strong>CSV datos + paradata</strong>: incluye tiempos por ítem, orden de presentación y metadatos de navegador.</li>
+        </ul>
+
+        <div id="tableContainer" class="mt-16">
+          <table>
+            <thead>
+              <tr>
+                <th style="width:18%;">Encuesta</th>
+                <th>Título</th>
+                <th style="width:12%;">Respuestas</th>
+                <th style="width:28%;">Descargas</th>
+              </tr>
+            </thead>
+            <tbody id="surveyTableBody">
+              <tr>
+                <td colspan="4" class="small muted">
+                  Cargando información de encuestas…
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <p class="small mt-8">
+          Nota: los conteos se basan en el número de documentos en <code>responses/&lt;surveyId&gt;/entries</code>.
+          Si cambian las reglas de seguridad de Firebase, este panel podría dejar de funcionar y habría que ajustar
+          los permisos desde la consola de Firebase.
+        </p>
+      </section>
+    </main>
+
+    <script type="module" src="./js/admin.js"></script>
+  </body>
+  </html>
+
