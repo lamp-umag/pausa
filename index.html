@@ -52,17 +52,7 @@
         filter: blur(80px);
       }
       header {
-        padding: 20px 16px;
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-        position: sticky;
-        top: 0;
-        background: color-mix(in srgb, var(--surface) 80%, transparent);
-        backdrop-filter: saturate(180%) blur(12px);
-        border-bottom: 1px solid color-mix(in srgb, var(--border) 50%, transparent);
-        z-index: 10;
-        position: relative;
+        display: none;
       }
       .brand {
         font-weight: 800;
@@ -376,17 +366,9 @@
       <div id="splashOverlay" class="splash-overlay">
         <img src="imgs/pautr.png" alt="Proyecto PAUSA" />
       </div>
-      <section id="home" class="card">
-        <h2 style="margin:0 0 12px 0; font-size:22px;">Espacio de encuestas — Proyecto PAUSA</h2>
-        <p class="info-text" style="margin-top:8px;">
-          En este espacio se ejecutan encuestas para <strong>Proyecto PAUSA</strong>, pero hay un problema con el link que estás usando.
-          Es posible que el enlace esté incompleto o haya expirado.
-        </p>
-        <p class="tiny" style="margin-top:8px;">
-          Si necesitas ayuda, por favor contacta a
-          <a href="mailto:pausa@umag.cl">pausa@umag.cl</a>.
-        </p>
-      </section>
+      <!-- Sección home vacía a propósito para evitar parpadeos;
+           el contenido lo gestiona JS solo cuando no hay encuesta seleccionada. -->
+      <section id="home" class="card" style="display:none"></section>
 
       <section id="runner" class="runner">
         <div id="meta"></div>

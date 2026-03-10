@@ -32,14 +32,12 @@
       "prompt": "Proyecto PAUSA\n\nGracias por tomarte unos minutos para responder este cuestionario sobre bienestar y experiencia universitaria. Tus respuestas son confidenciales y se utilizarán solo con fines de investigación.\n\nAntes de continuar, te recordamos que puedes revisar el consentimiento informado en este enlace: <a href=\"docs/consentimientoa.pdf\" target=\"_blank\" rel=\"noopener\">Leer consentimiento informado</a>.\n\nSi estás de acuerdo con participar, puedes presionar \"Siguiente\"."
     },
     {
-      "id": "rut_identificacion",
+      "id": "correo_contacto",
       "type": "text",
-      "prompt": "Para continuar, por favor ingresa tu RUT completo (o número de identificación personal) sin puntos.",
-      "placeholder": "Ejemplo: 12345678-9",
-      "maxLength": 12,
-      "required": true,
-      "allowedChars": "0123456789kK-",
-      "help": "Solo se permiten números, guion y la letra K."
+      "prompt": "Para poder identificar tus respuestas con tu persona, por favor ingresa el correo electrónico al que recibiste la invitación a este estudio.",
+      "placeholder": "Ejemplo: nombre@correo.cl",
+      "maxLength": 30,
+      "required": true
     },
     {
       "id": "info_s1",
