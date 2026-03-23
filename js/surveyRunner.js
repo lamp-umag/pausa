@@ -92,7 +92,8 @@ export function createSurveyApp({ db, elements }) {
       return;
     }
     const res = await fetch(`surveys/${meta.file}?_=${Date.now()}`);
-    const data = await res.json();
+    let data = await res.json();
+    data = await resolveSurveyExtends(data);
     const prepared = prepareSurvey(data);
     startSurvey(prepared);
   }
@@ -214,6 +215,114 @@ export function createSurveyApp({ db, elements }) {
   }
 
   // Hook para transformaciones del cuestionario: randomización, paradata de orden, etc.
+  /**
+   * Permite definir encuestas derivadas con `extends` y aplicar transformaciones pequeñas.
+   * - `extends`: string (archivo base dentro de surveys/)
+   * - overrides: id/title/description/settings/optionSets/items (si se incluyen)
+   * - `removeRutQuestions`: true -> elimina ítems cuyo `prompt` contiene "RUT" (tolerando puntos)
+   * - `introConsentPdfReplace`: { from, to } -> reemplaza en el ítem `intro_pausa`
+   */
+  async function resolveSurveyExtends(rawSurvey) {
+    if (!rawSurvey || typeof rawSurvey !== 'object') return rawSurvey;
+    const extendsSpec = rawSurvey.extends;
+    if (!extendsSpec) return rawSurvey;
+
+    const baseFile = typeof extendsSpec === 'string'
+      ? extendsSpec
+      : extendsSpec && typeof extendsSpec === 'object' ? extendsSpec.file : null;
+
+    if (!baseFile) return rawSurvey;
+
+    try {
+      const res = await fetch(`surveys/${baseFile}?_=${Date.now()}`);
+      const base = await res.json();
+      const merged = structuredClone(base);
+
+      function mergeSettings(baseSettings, overrideSettings) {
+        if (!overrideSettings || typeof overrideSettings !== 'object') return baseSettings;
+        const out = structuredClone(baseSettings || {});
+        // Para evitar “borrar” config base: hacemos merge solo a nivel 1 con foco en splash.
+        for (const [key, value] of Object.entries(overrideSettings)) {
+          if (
+            key === 'splash' &&
+            value &&
+            typeof value === 'object' &&
+            out.splash &&
+            typeof out.splash === 'object'
+          ) {
+            out.splash = { ...out.splash, ...value };
+          } else {
+            out[key] = value;
+          }
+        }
+        return out;
+      }
+
+      // Overrides directos (si el derivado los define).
+      if (rawSurvey.id) merged.id = rawSurvey.id;
+      if (rawSurvey.title) merged.title = rawSurvey.title;
+      if (rawSurvey.description) merged.description = rawSurvey.description;
+      if (rawSurvey.settings) merged.settings = mergeSettings(merged.settings, rawSurvey.settings);
+      if (rawSurvey.optionSets) {
+        merged.optionSets = {
+          ...(merged.optionSets || {}),
+          ...(rawSurvey.optionSets || {})
+        };
+      }
+      if (Array.isArray(rawSurvey.items)) merged.items = rawSurvey.items;
+
+      if (rawSurvey.removeRutQuestions) {
+        // Ej: "RUT", "R.U.T", "R U T" (puntos opcionales).
+        const rutRegex = /R\s*\.?\s*U\s*\.?\s*T/i;
+        merged.items = (merged.items || []).filter(it => {
+          const prompt = it && typeof it.prompt === 'string' ? it.prompt : '';
+          const id = it && typeof it.id === 'string' ? it.id : '';
+          return !rutRegex.test(prompt) && !/rut/i.test(id);
+        });
+      }
+
+      if (Array.isArray(rawSurvey.removeItemIds) && rawSurvey.removeItemIds.length > 0) {
+        const idsToRemove = new Set(rawSurvey.removeItemIds.filter(Boolean));
+        merged.items = (merged.items || []).filter(it => !idsToRemove.has(it && it.id));
+      }
+
+      if (rawSurvey.contactEmailRelocation && typeof rawSurvey.contactEmailRelocation === 'object') {
+        const cfg = rawSurvey.contactEmailRelocation;
+        const sourceId = typeof cfg.sourceId === 'string' ? cfg.sourceId : 'correo_contacto';
+        const insertBeforeId = typeof cfg.insertBeforeId === 'string' ? cfg.insertBeforeId : 'comentario_final';
+        const items = Array.isArray(merged.items) ? merged.items : [];
+        const sourceIndex = items.findIndex(it => it && it.id === sourceId);
+        if (sourceIndex >= 0) {
+          const emailItem = structuredClone(items[sourceIndex]);
+          if (typeof cfg.required === 'boolean') emailItem.required = cfg.required;
+          if (typeof cfg.prompt === 'string' && cfg.prompt.trim()) emailItem.prompt = cfg.prompt;
+
+          items.splice(sourceIndex, 1);
+          const targetIndex = items.findIndex(it => it && it.id === insertBeforeId);
+          if (targetIndex >= 0) items.splice(targetIndex, 0, emailItem);
+          else items.push(emailItem);
+          merged.items = items;
+        }
+      }
+
+      if (rawSurvey.introConsentPdfReplace && typeof rawSurvey.introConsentPdfReplace === 'object') {
+        const from = rawSurvey.introConsentPdfReplace.from;
+        const to = rawSurvey.introConsentPdfReplace.to;
+        if (typeof from === 'string' && typeof to === 'string') {
+          const introItem = (merged.items || []).find(it => it && it.id === 'intro_pausa');
+          if (introItem && typeof introItem.prompt === 'string') {
+            introItem.prompt = introItem.prompt.split(from).join(to);
+          }
+        }
+      }
+
+      return merged;
+    } catch (e) {
+      console.warn('No se pudo resolver survey.extends:', extendsSpec, e);
+      return rawSurvey;
+    }
+  }
+
   function prepareSurvey(rawSurvey) {
     const surveyCopy = structuredClone(rawSurvey);
     return applyRandomization(surveyCopy);
@@ -240,6 +349,7 @@ export function createSurveyApp({ db, elements }) {
     homeSection.style.display = 'none';
     runnerSection.style.display = 'block';
     header.style.display = 'none';
+    hideSplashOverlay();
 
     const splashCfg = survey.settings && survey.settings.splash;
     const shouldShowSplash = splashCfg && splashCfg.enabled;
@@ -247,13 +357,23 @@ export function createSurveyApp({ db, elements }) {
 
     if (shouldShowSplash) {
       const duration = typeof splashCfg.durationMs === 'number' ? splashCfg.durationMs : 1000;
-      if (progressEl) progressEl.style.opacity = '0';
-      showSplashOverlay();
-      setTimeout(() => {
-        hideSplashOverlay();
+      const splashImgSrc = splashCfg && (splashCfg.image || splashCfg.imageSrc || splashCfg.src);
+      const splashImgEl = splashOverlay ? splashOverlay.querySelector('img') : null;
+
+      // Si la encuesta no define imagen, solo no mostramos el loader (sin warnings).
+      if (splashImgEl && splashImgSrc) {
+        splashImgEl.src = splashImgSrc;
+        if (progressEl) progressEl.style.opacity = '0';
+        showSplashOverlay();
+        setTimeout(() => {
+          hideSplashOverlay();
+          if (progressEl) progressEl.style.opacity = '';
+          renderStep();
+        }, duration);
+      } else {
         if (progressEl) progressEl.style.opacity = '';
         renderStep();
-      }, duration);
+      }
     } else {
       if (progressEl) progressEl.style.opacity = '';
       renderStep();

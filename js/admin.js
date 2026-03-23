@@ -64,10 +64,116 @@ async function fetchSurveyDefinition(surveyMeta) {
   }
   try {
     const res = await fetch(`surveys/${surveyMeta.file}?_=${Date.now()}`);
-    return await res.json();
+    const def = await res.json();
+    return await resolveSurveyExtends(def);
   } catch (e) {
     console.warn('No se pudo leer la definición de la encuesta desde surveys/', surveyMeta.file, e);
     return null;
+  }
+}
+
+/**
+ * Permite definir encuestas derivadas con `extends` y aplicar transformaciones pequeñas.
+ * Debe mantenerse sincronizado con la lógica de `js/surveyRunner.js` para que el CSV
+ * exporte columnas en el mismo orden esperado.
+ */
+async function resolveSurveyExtends(rawSurvey) {
+  if (!rawSurvey || typeof rawSurvey !== 'object') return rawSurvey;
+  const extendsSpec = rawSurvey.extends;
+  if (!extendsSpec) return rawSurvey;
+
+  const baseFile = typeof extendsSpec === 'string'
+    ? extendsSpec
+    : extendsSpec && typeof extendsSpec === 'object' ? extendsSpec.file : null;
+
+  if (!baseFile) return rawSurvey;
+
+  try {
+    const res = await fetch(`surveys/${baseFile}?_=${Date.now()}`);
+    const base = await res.json();
+    const merged = structuredClone(base);
+
+    function mergeSettings(baseSettings, overrideSettings) {
+      if (!overrideSettings || typeof overrideSettings !== 'object') return baseSettings;
+      const out = structuredClone(baseSettings || {});
+      // Evitamos borrar configuración base: hacemos merge “shallow a nivel splash”.
+      for (const [key, value] of Object.entries(overrideSettings)) {
+        if (
+          key === 'splash' &&
+          value &&
+          typeof value === 'object' &&
+          out.splash &&
+          typeof out.splash === 'object'
+        ) {
+          out.splash = { ...out.splash, ...value };
+        } else {
+          out[key] = value;
+        }
+      }
+      return out;
+    }
+
+    if (rawSurvey.id) merged.id = rawSurvey.id;
+    if (rawSurvey.title) merged.title = rawSurvey.title;
+    if (rawSurvey.description) merged.description = rawSurvey.description;
+    if (rawSurvey.settings) merged.settings = mergeSettings(merged.settings, rawSurvey.settings);
+    if (rawSurvey.optionSets) {
+      merged.optionSets = {
+        ...(merged.optionSets || {}),
+        ...(rawSurvey.optionSets || {})
+      };
+    }
+    if (Array.isArray(rawSurvey.items)) merged.items = rawSurvey.items;
+
+    if (rawSurvey.removeRutQuestions) {
+      // Ej: "RUT", "R.U.T", "R U T" (puntos opcionales).
+      const rutRegex = /R\s*\.?\s*U\s*\.?\s*T/i;
+      merged.items = (merged.items || []).filter(it => {
+        const prompt = it && typeof it.prompt === 'string' ? it.prompt : '';
+        const id = it && typeof it.id === 'string' ? it.id : '';
+        return !rutRegex.test(prompt) && !/rut/i.test(id);
+      });
+    }
+
+    if (Array.isArray(rawSurvey.removeItemIds) && rawSurvey.removeItemIds.length > 0) {
+      const idsToRemove = new Set(rawSurvey.removeItemIds.filter(Boolean));
+      merged.items = (merged.items || []).filter(it => !idsToRemove.has(it && it.id));
+    }
+
+    if (rawSurvey.contactEmailRelocation && typeof rawSurvey.contactEmailRelocation === 'object') {
+      const cfg = rawSurvey.contactEmailRelocation;
+      const sourceId = typeof cfg.sourceId === 'string' ? cfg.sourceId : 'correo_contacto';
+      const insertBeforeId = typeof cfg.insertBeforeId === 'string' ? cfg.insertBeforeId : 'comentario_final';
+      const items = Array.isArray(merged.items) ? merged.items : [];
+      const sourceIndex = items.findIndex(it => it && it.id === sourceId);
+      if (sourceIndex >= 0) {
+        const emailItem = structuredClone(items[sourceIndex]);
+        if (typeof cfg.required === 'boolean') emailItem.required = cfg.required;
+        if (typeof cfg.prompt === 'string' && cfg.prompt.trim()) emailItem.prompt = cfg.prompt;
+
+        items.splice(sourceIndex, 1);
+        const targetIndex = items.findIndex(it => it && it.id === insertBeforeId);
+        if (targetIndex >= 0) items.splice(targetIndex, 0, emailItem);
+        else items.push(emailItem);
+        merged.items = items;
+      }
+    }
+
+    if (rawSurvey.introConsentPdfReplace && typeof rawSurvey.introConsentPdfReplace === 'object') {
+      const from = rawSurvey.introConsentPdfReplace.from;
+      const to = rawSurvey.introConsentPdfReplace.to;
+      if (typeof from === 'string' && typeof to === 'string') {
+        const introItem = (merged.items || []).find(it => it && it.id === 'intro_pausa');
+        if (introItem && typeof introItem.prompt === 'string') {
+          introItem.prompt = introItem.prompt.split(from).join(to);
+        }
+      }
+    }
+
+    return merged;
+  } catch (e) {
+    console.warn('No se pudo resolver survey.extends:', extendsSpec, e);
+    return rawSurvey;
   }
 }
 

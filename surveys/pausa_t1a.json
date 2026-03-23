@@ -6,7 +6,8 @@
     "randomizeItems": "within_scale",
     "splash": {
       "enabled": true,
-      "durationMs": 1500
+      "durationMs": 1500,
+      "image": "imgs/pautr.png"
     }
   },
   "optionSets": {

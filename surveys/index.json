@@ -11,6 +11,12 @@
       "title": "Encuesta Pausa T1A",
       "description": "Cuestionario sobre bienestar, contexto, salud, experiencia universitaria y aspectos personales.",
       "file": "pausa_t1a.json"
+    },
+    {
+      "id": "pausa_t1b",
+      "title": "Encuesta Pausa T1B",
+      "description": "Cuestionario sobre bienestar, contexto, salud, experiencia universitaria y aspectos personales (versión T1B).",
+      "file": "pausa_t1b.json"
     }
   ]
 }

@@ -1,0 +1,25 @@
+{
+  "extends": "pausa_t1a.json",
+  "id": "pausa_t1b",
+  "title": "Encuesta Pausa T1B",
+  "description": "Cuestionario sobre bienestar, contexto, salud, experiencia universitaria y aspectos personales (versión T1B).",
+  "settings": {
+    "splash": {
+      "image": "imgs/mattr.png"
+    }
+  },
+  "removeItemIds": [
+    "contacto_telefono"
+  ],
+  "contactEmailRelocation": {
+    "sourceId": "correo_contacto",
+    "insertBeforeId": "comentario_final",
+    "required": false,
+    "prompt": "Si te gustaria saber mas sobre los resultados de este estudio (mas adelante durante el ano), o si te gustaria que te pudieramos contactar mas adelante, puedes dejar tu correo electronico aca:"
+  },
+  "removeRutQuestions": true,
+  "introConsentPdfReplace": {
+    "from": "consentimientoa.pdf",
+    "to": "consentimientob.pdf"
+  }
+}
