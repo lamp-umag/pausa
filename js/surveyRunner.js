@@ -9,6 +9,8 @@ import { collection, addDoc, serverTimestamp } from "https://www.gstatic.com/fir
 // - textos de cierre, etc.
 export const APP_CONFIG = {
   enableParadata: true,
+  /** Máximo de eventos guardados en answerChangeEvents (el contador global sigue subiendo). */
+  maxAnswerChangeEvents: 50,
   // En el futuro podríamos leer esto desde el JSON de la encuesta
   // por sección, algo tipo: section.randomize: true.
   randomization: {
@@ -45,6 +47,89 @@ export function createSurveyApp({ db, elements }) {
   let itemTimes = {};
   let responseTimestamps = {};
   let presentationOrder = null;
+  /** Valor de answers[itemId] al entrar al paso (para detectar cambios de opinión al salir). */
+  let stepEntrySnapshot = {};
+  let navBackCount = 0;
+  let answerChangeCount = 0;
+  let answerChangeEvents = [];
+  let answerChangeEventsTruncated = false;
+
+  function cloneAnswerValue(v) {
+    if (v === undefined) return undefined;
+    if (v === null) return null;
+    if (Array.isArray(v)) return v.slice();
+    if (typeof v === 'object') return { ...v };
+    return v;
+  }
+
+  function isEmptyAnswer(v) {
+    if (v === undefined || v === null) return true;
+    if (Array.isArray(v)) return v.length === 0;
+    if (typeof v === 'string') return v.trim() === '';
+    return false;
+  }
+
+  function answersEqual(a, b) {
+    if (a === b) return true;
+    if (a == null && b == null) return true;
+    if (a == null || b == null) return false;
+    if (Array.isArray(a) && Array.isArray(b)) {
+      if (a.length !== b.length) return false;
+      const sa = [...a].map(String).sort();
+      const sb = [...b].map(String).sort();
+      return sa.every((v, i) => v === sb[i]);
+    }
+    return String(a) === String(b);
+  }
+
+  /** Primera respuesta (vacío → valor) no cuenta como “cambio de opinión”. */
+  function shouldRecordOpinionChange(before, after) {
+    if (answersEqual(before, after)) return false;
+    if (isEmptyAnswer(before) && !isEmptyAnswer(after)) return false;
+    return true;
+  }
+
+  function serializeForEvent(v) {
+    if (v === undefined) return null;
+    if (v === null) return null;
+    if (Array.isArray(v)) return v.slice().sort();
+    if (typeof v === 'string') {
+      const s = v.trim();
+      return s.length > 200 ? `${s.slice(0, 200)}…` : s;
+    }
+    return v;
+  }
+
+  function recordStepAnswerChangeIfAny(item) {
+    if (!item || item.type === 'info') return;
+    const before = stepEntrySnapshot[item.id];
+    const after = answers[item.id];
+    if (!shouldRecordOpinionChange(before, after)) return;
+    answerChangeCount += 1;
+    const maxEv = APP_CONFIG.maxAnswerChangeEvents ?? 50;
+    if (answerChangeEvents.length >= maxEv) {
+      answerChangeEventsTruncated = true;
+      return;
+    }
+    answerChangeEvents.push({
+      itemId: item.id,
+      from: serializeForEvent(before),
+      to: serializeForEvent(after),
+      at: new Date().toISOString()
+    });
+  }
+
+  function leaveCurrentItemParadata(item) {
+    if (!APP_CONFIG.enableParadata || !item) return;
+    if (itemStartTime) {
+      const delta = Date.now() - itemStartTime;
+      itemTimes[item.id] = (itemTimes[item.id] || 0) + delta;
+      responseTimestamps[item.id] = new Date().toISOString();
+    }
+    if (item.type !== 'info') {
+      recordStepAnswerChangeIfAny(item);
+    }
+  }
 
   async function loadSurveyIndex() {
     const res = await fetch('surveys/index.json?_=' + Date.now());
@@ -345,6 +430,11 @@ export function createSurveyApp({ db, elements }) {
     startTime = Date.now();
     itemTimes = {};
     responseTimestamps = {};
+    stepEntrySnapshot = {};
+    navBackCount = 0;
+    answerChangeCount = 0;
+    answerChangeEvents = [];
+    answerChangeEventsTruncated = false;
     presentationOrder = Array.isArray(survey._presentationOrder) ? survey._presentationOrder : survey.items.map(it => it.id);
     homeSection.style.display = 'none';
     runnerSection.style.display = 'block';
@@ -393,7 +483,11 @@ export function createSurveyApp({ db, elements }) {
     if (currentIndex >= total) {
       questionContainer.innerHTML = '<div class="q center">¿Listo para enviar?</div>';
       const back = button('Volver', 'secondary');
-      back.onclick = () => { currentIndex = total - 1; renderStep(); };
+      back.onclick = () => {
+        if (APP_CONFIG.enableParadata) navBackCount += 1;
+        currentIndex = total - 1;
+        renderStep();
+      };
       const send = button('Enviar respuestas', 'primary');
       send.onclick = submitResponses;
       controlsContainer.append(back, send);
@@ -403,6 +497,9 @@ export function createSurveyApp({ db, elements }) {
     const item = survey.items[currentIndex];
     const isLastItem = currentIndex === survey.items.length - 1;
     itemStartTime = Date.now();
+    if (item && item.type !== 'info') {
+      stepEntrySnapshot[item.id] = cloneAnswerValue(answers[item.id]);
+    }
 
     // Tipo 'info': solo muestra texto informativo (sin input)
     if (item.type === 'info') {
@@ -428,19 +525,14 @@ export function createSurveyApp({ db, elements }) {
     }
 
     const goNext = () => {
-      if (APP_CONFIG.enableParadata && item) {
-        if (itemStartTime) itemTimes[item.id] = Date.now() - itemStartTime;
-        responseTimestamps[item.id] = new Date().toISOString();
-      }
+      leaveCurrentItemParadata(item);
       currentIndex += 1;
       renderStep();
     };
 
     const goPrev = () => {
-      if (APP_CONFIG.enableParadata && item) {
-        if (itemStartTime) itemTimes[item.id] = Date.now() - itemStartTime;
-        responseTimestamps[item.id] = new Date().toISOString();
-      }
+      leaveCurrentItemParadata(item);
+      if (APP_CONFIG.enableParadata) navBackCount += 1;
       currentIndex = Math.max(0, currentIndex - 1);
       renderStep();
     };
@@ -799,6 +891,11 @@ export function createSurveyApp({ db, elements }) {
   }
 
   async function submitResponses() {
+    if (APP_CONFIG.enableParadata && survey && currentIndex < survey.items.length) {
+      const item = survey.items[currentIndex];
+      leaveCurrentItemParadata(item);
+    }
+
     const urlParams = new URLSearchParams(location.search);
     const serverCode = urlParams.get('srv') || urlParams.get('iden') || null;
 
@@ -827,6 +924,12 @@ export function createSurveyApp({ db, elements }) {
       itemTimes,
       ...(presentationOrder && { presentationOrder }),
       ...(Object.keys(responseTimestamps).length > 0 && { responseTimestamps }),
+      ...(APP_CONFIG.enableParadata && {
+        navBackCount,
+        answerChangeCount,
+        ...(answerChangeEvents.length > 0 && { answerChangeEvents }),
+        ...(answerChangeEventsTruncated && { answerChangeEventsTruncated: true })
+      }),
       browserData,
       createdAt: serverTimestamp(),
       ua: navigator.userAgent,

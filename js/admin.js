@@ -426,6 +426,10 @@ async function exportSurveyCsv({ surveyMeta, includeParadata, includeExcluded = 
     if (includeParadata) {
       const coreParadata = [
         'totalTime_ms',
+        'nav_back_count',
+        'answer_change_count',
+        'answer_change_events_truncated',
+        'answer_change_events_json',
         'presentationOrder',
         'ua',
         'path',
@@ -484,6 +488,14 @@ async function exportSurveyCsv({ surveyMeta, includeParadata, includeExcluded = 
         const itemTimes = data.itemTimes || {};
 
         row.push(data.totalTime != null ? data.totalTime : '');
+        row.push(data.navBackCount != null ? data.navBackCount : '');
+        row.push(data.answerChangeCount != null ? data.answerChangeCount : '');
+        row.push(data.answerChangeEventsTruncated ? '1' : '0');
+        row.push(
+          Array.isArray(data.answerChangeEvents) && data.answerChangeEvents.length
+            ? JSON.stringify(data.answerChangeEvents)
+            : ''
+        );
         row.push(data.presentationOrder ? JSON.stringify(data.presentationOrder) : '');
         row.push(data.ua || '');
         row.push(data.path || '');
@@ -582,7 +594,7 @@ function renderCaseTable() {
   caseTableBody.innerHTML = '';
 
   if (!rows.length) {
-    caseTableBody.innerHTML = '<tr><td colspan="9" class="small muted">No hay casos para este filtro.</td></tr>';
+    caseTableBody.innerHTML = '<tr><td colspan="11" class="small muted">No hay casos para este filtro.</td></tr>';
     return;
   }
 
@@ -592,10 +604,15 @@ function renderCaseTable() {
     const ann = activeCaseDedupeMap.get(id) || { confidence: 'low', isDuplicate: false, keepId: id };
     const completeness = Math.round(answerCompleteness(data.answers) * 100);
 
+    const backs = data.navBackCount != null ? data.navBackCount : '—';
+    const changes = data.answerChangeCount != null ? data.answerChangeCount : '—';
+
     tr.innerHTML = `
       <td><code>${id}</code></td>
       <td class="small">${formatIsoFromData(data)}</td>
       <td class="small" title="Tiempo desde inicio hasta envío (paradata)">${formatTotalTimeDisplay(data)}</td>
+      <td class="small text-right" title="Veces que pulsó Atrás">${backs}</td>
+      <td class="small text-right" title="Cambios de opinión (valor distinto al entrar al ítem)">${changes}</td>
       <td class="small">${data.serverCode || ''}</td>
       <td class="small">${completeness}%</td>
       <td class="small">${ann.confidence.toUpperCase()}${ann.isDuplicate ? ` (-> ${ann.keepId})` : ''}</td>
@@ -604,9 +621,9 @@ function renderCaseTable() {
       <td></td>
     `;
 
-    const excludeCell = tr.children[6];
-    const reasonCell = tr.children[7];
-    const noteCell = tr.children[8];
+    const excludeCell = tr.children[8];
+    const reasonCell = tr.children[9];
+    const noteCell = tr.children[10];
 
     const excludeCb = document.createElement('input');
     excludeCb.type = 'checkbox';
@@ -680,7 +697,7 @@ async function openCaseReview(surveyMeta) {
   caseSurveyChip.classList.remove('hidden');
   caseSurveyChip.textContent = surveyMeta.id;
   caseReviewCard.classList.remove('hidden');
-  caseTableBody.innerHTML = '<tr><td colspan="9" class="small muted">Cargando casos...</td></tr>';
+  caseTableBody.innerHTML = '<tr><td colspan="11" class="small muted">Cargando casos...</td></tr>';
 
   try {
     const colRef = collection(db, `responses/${surveyMeta.id}/entries`);
@@ -696,7 +713,7 @@ async function openCaseReview(surveyMeta) {
     renderCaseTable();
   } catch (e) {
     console.error(e);
-    caseTableBody.innerHTML = '<tr><td colspan="9" class="small danger">No se pudieron cargar los casos.</td></tr>';
+    caseTableBody.innerHTML = '<tr><td colspan="11" class="small danger">No se pudieron cargar los casos.</td></tr>';
   }
 }
 
