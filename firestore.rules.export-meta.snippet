@@ -1,0 +1,11 @@
+// Copiar este bloque DENTRO de: match /databases/{database}/documents { ... }
+// en Firebase Console → Firestore → Reglas (o fusionar con tu firestore.rules del proyecto).
+//
+// Rutas usadas por admin: response_export_meta/{surveyId}/flags/{responseId}
+// (metadatos de exclusión para CSV; los documentos de respuesta no se modifican).
+
+match /response_export_meta/{surveyId}/flags/{responseId} {
+  allow read, write: if request.auth != null &&
+    (request.auth.token.email == 'hermanelgueta@gmail.com' ||
+     request.auth.token.email == 'herman.elgueta@umag.cl');
+}

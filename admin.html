@@ -245,6 +245,27 @@
       .mt-8 { margin-top: 8px; }
       .mt-16 { margin-top: 16px; }
       .hidden { display: none; }
+      .input, .select {
+        width: 100%;
+        padding: 6px 8px;
+        border-radius: 8px;
+        border: 1px solid rgba(148, 163, 184, 0.45);
+        background: rgba(15, 23, 42, 0.92);
+        color: var(--foreground);
+        font-size: 12px;
+      }
+      .input::placeholder {
+        color: #8fa2bd;
+      }
+      .table-scroll {
+        overflow-x: auto;
+      }
+      .w-compact {
+        min-width: 110px;
+      }
+      .w-medium {
+        min-width: 180px;
+      }
       a {
         color: var(--primary);
         text-decoration: none;
@@ -345,6 +366,61 @@
           Si cambian las reglas de seguridad de Firebase, este panel podría dejar de funcionar y habría que ajustar
           los permisos desde la consola de Firebase.
         </p>
+      </section>
+
+      <section class="card hidden" id="caseReviewCard">
+        <div class="card-header">
+          <h2>Revisión de casos</h2>
+          <div class="row" style="gap:8px;">
+            <span id="caseSurveyChip" class="chip hidden"></span>
+            <button id="closeCaseReviewBtn" class="btn btn-outline btn-sm">Cerrar</button>
+          </div>
+        </div>
+        <p class="muted">
+          Revisa respuestas individuales y marca exclusiones persistentes para no incluirlas por defecto en exportaciones.
+        </p>
+        <div class="row mt-8" style="align-items:flex-end;">
+          <label class="small w-compact">
+            Filtro exclusión
+            <select id="excludeFilterSelect" class="select">
+              <option value="all">Todos</option>
+              <option value="included">Solo incluidos</option>
+              <option value="excluded">Solo excluidos</option>
+            </select>
+          </label>
+          <label class="small w-compact">
+            Filtro dedupe
+            <select id="dedupeFilterSelect" class="select">
+              <option value="all">Todos</option>
+              <option value="high">Duplicado HIGH</option>
+              <option value="medium">Duplicado MEDIUM</option>
+              <option value="low">Sin señal fuerte</option>
+            </select>
+          </label>
+          <button id="refreshCasesBtn" class="btn btn-outline btn-sm">Recargar casos</button>
+        </div>
+        <div class="table-scroll mt-16">
+          <table>
+            <thead>
+              <tr>
+                <th style="width:14%;">responseId</th>
+                <th style="width:12%;">Fecha</th>
+                <th style="width:11%;">Tiempo total</th>
+                <th style="width:8%;">serverCode</th>
+                <th style="width:8%;">Completitud</th>
+                <th style="width:10%;">Dedupe</th>
+                <th style="width:8%;">Exclusión</th>
+                <th style="width:9%;">Motivo</th>
+                <th style="width:12%;">Nota</th>
+              </tr>
+            </thead>
+            <tbody id="caseTableBody">
+              <tr>
+                <td colspan="9" class="small muted">Selecciona “Gestionar casos” en una encuesta para comenzar.</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
       </section>
     </main>
 
