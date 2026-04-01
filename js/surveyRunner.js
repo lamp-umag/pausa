@@ -53,6 +53,7 @@ export function createSurveyApp({ db, elements }) {
   let answerChangeCount = 0;
   let answerChangeEvents = [];
   let answerChangeEventsTruncated = false;
+  let itemAnswerChangeCount = {};
 
   function cloneAnswerValue(v) {
     if (v === undefined) return undefined;
@@ -106,6 +107,7 @@ export function createSurveyApp({ db, elements }) {
     const after = answers[item.id];
     if (!shouldRecordOpinionChange(before, after)) return;
     answerChangeCount += 1;
+    itemAnswerChangeCount[item.id] = (itemAnswerChangeCount[item.id] || 0) + 1;
     const maxEv = APP_CONFIG.maxAnswerChangeEvents ?? 50;
     if (answerChangeEvents.length >= maxEv) {
       answerChangeEventsTruncated = true;
@@ -435,6 +437,7 @@ export function createSurveyApp({ db, elements }) {
     answerChangeCount = 0;
     answerChangeEvents = [];
     answerChangeEventsTruncated = false;
+    itemAnswerChangeCount = {};
     presentationOrder = Array.isArray(survey._presentationOrder) ? survey._presentationOrder : survey.items.map(it => it.id);
     homeSection.style.display = 'none';
     runnerSection.style.display = 'block';
@@ -927,6 +930,7 @@ export function createSurveyApp({ db, elements }) {
       ...(APP_CONFIG.enableParadata && {
         navBackCount,
         answerChangeCount,
+        ...(Object.keys(itemAnswerChangeCount).length > 0 && { itemAnswerChangeCount }),
         ...(answerChangeEvents.length > 0 && { answerChangeEvents }),
         ...(answerChangeEventsTruncated && { answerChangeEventsTruncated: true })
       }),

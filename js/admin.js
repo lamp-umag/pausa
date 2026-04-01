@@ -408,9 +408,9 @@ async function exportSurveyCsv({ surveyMeta, includeParadata, includeExcluded = 
     });
 
     const answerKeyList = Array.from(allAnswerKeys);
-    const orderedKeys = itemOrder.length
-      ? itemOrder.filter(id => answerKeyList.includes(id))
-      : [];
+    // Siempre incluir TODAS las variables definidas en el formulario,
+    // aunque ningún caso las haya respondido todavía.
+    const orderedKeys = itemOrder.length ? itemOrder.slice() : [];
     const extraKeys = itemOrder.length
       ? answerKeyList.filter(id => !itemOrder.includes(id)).sort()
       : answerKeyList.sort();
@@ -441,11 +441,14 @@ async function exportSurveyCsv({ surveyMeta, includeParadata, includeExcluded = 
         'browser_referrer'
       ];
       const perItemTimeHeaders = itemOrder.map(id => `${id}_TIME`);
+      const perItemChangeHeaders = itemOrder.map(id => `${id}_CHANGE_COUNT`);
       paradataHeaders.push(
         ...coreParadata,
         ...perItemTimeHeaders,
+        ...perItemChangeHeaders,
         'raw_itemTimes',
-        'raw_responseTimestamps'
+        'raw_responseTimestamps',
+        'raw_itemAnswerChangeCount'
       );
     }
 
@@ -486,6 +489,7 @@ async function exportSurveyCsv({ surveyMeta, includeParadata, includeExcluded = 
 
       if (includeParadata) {
         const itemTimes = data.itemTimes || {};
+        const itemAnswerChanges = data.itemAnswerChangeCount || {};
 
         row.push(data.totalTime != null ? data.totalTime : '');
         row.push(data.navBackCount != null ? data.navBackCount : '');
@@ -516,9 +520,14 @@ async function exportSurveyCsv({ surveyMeta, includeParadata, includeExcluded = 
           const t = itemTimes[itemId];
           row.push(t != null ? t : '');
         }
+        for (const itemId of itemOrder) {
+          const c = itemAnswerChanges[itemId];
+          row.push(c != null ? c : 0);
+        }
 
         row.push(data.itemTimes ? JSON.stringify(data.itemTimes) : '');
         row.push(data.responseTimestamps ? JSON.stringify(data.responseTimestamps) : '');
+        row.push(data.itemAnswerChangeCount ? JSON.stringify(data.itemAnswerChangeCount) : '');
       }
 
       rows.push(row);
