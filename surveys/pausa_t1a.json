@@ -30,7 +30,7 @@
     {
       "id": "intro_pausa",
       "type": "info",
-      "prompt": "Proyecto PAUSA\n\nGracias por tomarte unos minutos para responder este cuestionario sobre bienestar y experiencia universitaria. Tus respuestas son confidenciales y se utilizarán solo con fines de investigación.\n\nAntes de continuar, te recordamos que puedes revisar el consentimiento informado en este enlace: <a href=\"docs/consentimientoa.pdf\" target=\"_blank\" rel=\"noopener\">Leer consentimiento informado</a>.\n\nSi estás de acuerdo con participar, puedes presionar \"Siguiente\"."
+      "prompt": "Proyecto PAUSA\n\nGracias por tomarte unos minutos para responder este cuestionario sobre bienestar y experiencia universitaria. Tus respuestas son confidenciales y se utilizarán solo con fines de investigación.\n\nAntes de continuar, te recordamos que puedes revisar el consentimiento informado en este enlace: <a href=\"docs/consentimientoa.pdf\" target=\"_blank\" rel=\"noopener\">Leer consentimiento informado</a>.\n\nSi estás de acuerdo con las condiciones del estudio, puedes presionar \"Siguiente\"."
     },
     {
       "id": "correo_contacto",
