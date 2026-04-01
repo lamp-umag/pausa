@@ -38,9 +38,16 @@ For maintainability, the runtime behavior is implemented in JS, while the survey
 - `js/admin.js`
   - Lists surveys from `surveys/index.json`.
   - For each survey, counts Firestore response docs in `responses/<surveyId>/entries`.
-  - Exports CSV:
-    - Response answers: `ans_<item.id>`
-    - Optional paradata (timings + browser meta)
+  - Supports case review table per survey:
+    - mark/unmark exclusion from exports (`excludedFromExport`)
+    - set exclusion reason and note
+  - Stores export metadata in a separate collection:
+    - `response_export_meta/<surveyId>/flags/<responseId>`
+  - Exports CSV in different modes:
+    - data raw
+    - data dedupe
+    - data + paradata (dedupe)
+  - CSV rows are exported newest -> oldest.
 
 ## How a response flows (today)
 
@@ -81,8 +88,25 @@ On submit, payload includes:
 - `surveyId`
 - `answers` (keyed by `item.id`)
 - `serverCode` (from URL: `srv` or `iden`)
-- paradata if enabled in code (`totalTime`, `presentationOrder`, per-item timestamps, browser meta)
+- paradata if enabled in code, including:
+  - `totalTime`
+  - `itemTimes` (accumulated per item across revisits)
+  - `responseTimestamps`
+  - `presentationOrder`
+  - `navBackCount`
+  - `answerChangeCount`
+  - `itemAnswerChangeCount`
+  - `answerChangeEvents` (capped event list with `{ itemId, from, to, at }`)
+  - `answerChangeEventsTruncated` (boolean when event cap is reached)
+  - browser metadata (`browserData`, `ua`)
 - `path` = `location.pathname + location.search` (full query string), which is helpful for linking campaigns/invites.
+
+### 7) Export shaping behavior
+In `js/admin.js`, export currently:
+- includes all survey-defined answer columns from `surveyDef.items` even if some were never answered in data yet
+- appends extra answer keys found in data but not in form definition
+- includes per-item paradata columns for all form items (`<itemId>_TIME`, `<itemId>_CHANGE_COUNT`)
+- includes raw JSON backup columns (`raw_itemTimes`, `raw_responseTimestamps`, `raw_itemAnswerChangeCount`, `answer_change_events_json`)
 
 ## Notes specific to this repo
 

@@ -60,6 +60,17 @@ Every item should include:
 - `id` (string, used as the answer key: `answers[item.id]`)
 - `type` (string, controls how it is rendered)
 
+## Response/export behavior linked to your JSON
+
+The admin exporter uses the survey definition to build stable CSV headers.
+
+- Answer columns are created from `items[].id` as `ans_<itemId>`.
+- Those columns are included even when some items have no answers yet in collected data.
+- If Firestore has extra answer keys not present in the current JSON, those are appended after form-defined keys.
+- In paradata export, per-item columns are also created for all defined items:
+  - `<itemId>_TIME`
+  - `<itemId>_CHANGE_COUNT`
+
 ## Item types and required fields
 
 ### `type: "info"`
@@ -220,4 +231,24 @@ Before shipping:
 - Ensure “final submission” item exists:
   - the runner assumes the last item is your final screen
   - in current code, it uses `item.id === "comentario_final"` to label the submit button as “Enviar”.
+
+## Paradata fields collected by the runner (today)
+
+When `APP_CONFIG.enableParadata` is true, response docs can include:
+- `totalTime`
+- `itemTimes` (accumulated by item, across revisits)
+- `responseTimestamps`
+- `presentationOrder`
+- `navBackCount`
+- `answerChangeCount`
+- `itemAnswerChangeCount` (object keyed by `itemId`)
+- `answerChangeEvents` (capped list of change events)
+- `answerChangeEventsTruncated` (boolean)
+
+Change events (`answerChangeEvents`) have this shape:
+- `{ itemId, from, to, at }`
+
+Important:
+- A first-time answer (empty -> value) does not count as “change of mind”.
+- Changes are detected per step by comparing value at item entry vs value at item exit.
 

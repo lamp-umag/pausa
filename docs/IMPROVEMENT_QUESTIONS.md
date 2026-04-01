@@ -55,6 +55,7 @@ Question:
 
 Export CSV currently uses:
 - the definition’s `surveyDef.items` order for header ordering
+- while rows are exported newest -> oldest by `createdAt`
 - while the runner may randomize item presentation order.
 
 Why this matters:
@@ -64,6 +65,43 @@ Why this matters:
 
 Question:
 - Should the CSV include both (or should the header follow `_presentationOrder`)?
+
+## Dedupe strategy calibration
+
+Today:
+- Admin export supports dedupe mode with confidence buckets (`high`, `medium`, `low`).
+- Signals combine server code, answer fingerprint, time proximity, and browser hints.
+
+Why this matters:
+- Different studies may prefer stricter vs looser dedupe thresholds.
+
+Question:
+- Should dedupe thresholds become configurable per survey (e.g., time window)?
+
+## Manual exclusion metadata path
+
+Today:
+- Exclusion flags are stored outside response docs in:
+  - `response_export_meta/{surveyId}/flags/{responseId}`
+
+Why this matters:
+- Safer than mutating raw response docs.
+- Requires explicit Firestore rules for admin writes.
+
+Question:
+- Do we want a permanent deploy workflow for Firestore rules in this repo?
+
+## Extended paradata growth controls
+
+Today:
+- Runner stores `answerChangeEvents` with a cap and `answerChangeEventsTruncated`.
+- Also stores global and per-item change counters.
+
+Why this matters:
+- Prevents large documents while preserving useful behavior traces.
+
+Question:
+- Is current event cap (`maxAnswerChangeEvents`) the right default for production?
 
 ## Security / permissions notes (Firestore)
 
