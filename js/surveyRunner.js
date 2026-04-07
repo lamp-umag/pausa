@@ -17,7 +17,7 @@ export const APP_CONFIG = {
     enabled: false
   },
   messages: {
-    thankYou: '<div class="q center">¡Muchas gracias por tu participación!</div><div class="info-text center">Tus respuestas son muy valiosas.\n\nAnte cualquier duda o consulta, puedes contactarte con pausa@umag.cl.</div>'
+    thankYou: '<div class="q center">¡Muchas gracias por tu participación!</div><div class="info-text center">Tus respuestas son muy valiosas.\n\nMás adelante durante el año enviaremos invitaciones a otras encuestas del estudio, y sería muy valioso poder seguir contando con tu contribución.\n\nAnte cualquier duda o consulta, puedes contactarte con pausa@umag.cl.</div>'
   }
 };
 
