@@ -15,7 +15,7 @@
     "sourceId": "correo_contacto",
     "insertBeforeId": "comentario_final",
     "required": false,
-    "prompt": "Si te gustaria saber mas sobre los resultados de este estudio (mas adelante durante el ano), o si te gustaria que te pudieramos contactar mas adelante, puedes dejar tu correo electronico aca:"
+    "prompt": "Si te gustaria saber mas sobre los resultados de este estudio (más adelante durante el año), o si te gustaria que te pudieramos contactar más adelante, puedes dejar tu correo electronico umag aca:"
   },
   "removeRutQuestions": true,
   "introConsentPdfReplace": {
