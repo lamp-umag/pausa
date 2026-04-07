@@ -333,8 +333,8 @@
           </div>
         </div>
         <p class="muted">
-          Para cada encuesta se muestran el número de respuestas guardadas en <code>Firestore</code> y accesos directos
-          para descargar:
+          Para cada encuesta se muestra cuántas respuestas están <strong>incluidas en exportación</strong> (no excluidas en revisión de casos),
+          más accesos directos para descargar:
         </p>
         <ul class="small">
           <li><strong>CSV datos</strong>: solo variables de respuesta, listo para importar a R / Python / SPSS.</li>
@@ -347,7 +347,7 @@
               <tr>
                 <th style="width:18%;">Encuesta</th>
                 <th>Título</th>
-                <th style="width:12%;">Respuestas</th>
+                <th style="width:12%;">Incluidas</th>
                 <th style="width:28%;">Descargas</th>
               </tr>
             </thead>
@@ -362,7 +362,9 @@
         </div>
 
         <p class="small mt-8">
-          Nota: los conteos se basan en el número de documentos en <code>responses/&lt;surveyId&gt;/entries</code>.
+          Nota: el conteo excluye respuestas marcadas como excluidas del export (metadatos en
+          <code>response_export_meta/&lt;surveyId&gt;/flags</code>). El total de documentos en
+          <code>responses/&lt;surveyId&gt;/entries</code> puede ser mayor.
           Si cambian las reglas de seguridad de Firebase, este panel podría dejar de funcionar y habría que ajustar
           los permisos desde la consola de Firebase.
         </p>

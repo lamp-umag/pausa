@@ -216,10 +216,16 @@ async function resolveSurveyExtends(rawSurvey) {
   }
 }
 
+/** Cuenta respuestas incluidas en export (no marcadas como excluidas en response_export_meta). */
 async function countResponsesForSurvey(surveyId) {
   const colRef = collection(db, `responses/${surveyId}/entries`);
-  const snap = await getDocs(colRef);
-  return snap.size;
+  const [snap, flagsMap] = await Promise.all([getDocs(colRef), fetchExportFlagsMap(surveyId)]);
+  let n = 0;
+  snap.forEach(d => {
+    const data = mergeExportMetaIntoData(d.data(), flagsMap.get(d.id));
+    if (!data?.excludedFromExport) n += 1;
+  });
+  return n;
 }
 
 function buildCsv(rows, delimiter = ',') {
