@@ -165,12 +165,12 @@ async function resolveSurveyExtends(rawSurvey) {
     if (Array.isArray(rawSurvey.items)) merged.items = rawSurvey.items;
 
     if (rawSurvey.removeRutQuestions) {
-      // Ej: "RUT", "R.U.T", "R U T" (puntos opcionales).
-      const rutRegex = /R\s*\.?\s*U\s*\.?\s*T/i;
+      // Solo detecta el token "RUT" aislado (evita falsos positivos como "Disfruto").
+      const rutRegex = /\bR\s*\.?\s*U\s*\.?\s*T\b/i;
       merged.items = (merged.items || []).filter(it => {
         const prompt = it && typeof it.prompt === 'string' ? it.prompt : '';
         const id = it && typeof it.id === 'string' ? it.id : '';
-        return !rutRegex.test(prompt) && !/rut/i.test(id);
+        return !rutRegex.test(prompt) && !/\brut\b/i.test(id);
       });
     }
 
